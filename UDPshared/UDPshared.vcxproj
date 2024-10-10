@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{1650e806-8c32-4361-af35-f90e22303c31}</ProjectGuid>
-    <RootNamespace>ThreadsBase</RootNamespace>
+    <ProjectGuid>{9c0fee65-1f4c-4e63-a0a6-be3eec85931e}</ProjectGuid>
+    <RootNamespace>UDPshared</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,7 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Threads Base.cpp" />
+    <ClInclude Include="uudp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

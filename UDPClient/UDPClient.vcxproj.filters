@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Threads Base.cpp">
+    <ClCompile Include="UDPClient.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
