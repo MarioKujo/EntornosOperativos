@@ -7,7 +7,6 @@
 #include <WS2tcpip.h>
 #include <string>
 #include <assert.h>
-
 #define MSG_SIZE 256
 
 typedef class DataPacket {
@@ -15,7 +14,7 @@ public:
     int client_id;
     int sequence;
     char msg[MSG_SIZE];
-    DataPacket() {};
+    DataPacket() :client_id(0), sequence(0), msg{ NULL } {}
     DataPacket(int _client_id, int _sequence, std::string _msg) {
         client_id = _client_id;
         sequence = _sequence;

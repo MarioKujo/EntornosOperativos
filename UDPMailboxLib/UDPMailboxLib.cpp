@@ -5,6 +5,7 @@
 #include "pch.h"
 #include "framework.h"
 #include "UDPMailboxLib.h"
+#include <format>
 
 
 std::ostream& operator << (std::ostream& os, const DataPacket& dp) {
@@ -28,19 +29,49 @@ void treatErrorExit(const std::string msg, SOCKET s, int error) {
 //TODO:performs sendto, assuming all required WinSock2 previous calls were succesfull
 int sendtoMsg(SOCKET s, sockaddr_in* dest_addr, PDataPacket packet, std::string prefix) {
     //now we just send the data through the socket
-    return 0;
+    int result = sendto(s, (char*)&packet, sizeof(DataPacket), 0, (SOCKADDR*)&dest_addr, sizeof(SOCKADDR));
+    if (result < 0) {
+        treatError(format("{}: error while sending: ", prefix), s);
+        return SOCKET_ERROR;
+    }
+
+    std::cout << "Client:Succesfully sent msg" << std::endl;
+    return result;
 }
 //TODO:performs recvfrom, assuming all required WinSock2 previous calls were succesfull
 int recvfromMsg(SOCKET s, sockaddr_in* sender_addr, PDataPacket response, std::string prefix) {
     //receive response
-    return 0;
+    int result = recvfrom(s, (char*)&response, sizeof(DataPacket), 0, (SOCKADDR*)&sender_addr, sizeof(sender_addr));
+    if (result == SOCKET_ERROR) {
+        treatError(format("{}: error while receiving: ", prefix), s);
+        return SOCKET_ERROR;
+    }
+    return result;
 }
 
 //TODO:performs sendtoMsg and then recvfromMsg, assuming all required WinSock2 previous calls were succesfull
 int sendtorecvfromMsg(SOCKET s, sockaddr_in* dest_addr, PDataPacket packet, PDataPacket response, std::string prefix) {
-    return 0;
+    int result= sendtoMsg(s, dest_addr, packet, prefix);
+    if (result == SOCKET_ERROR) {
+        return SOCKET_ERROR;
+    }
+    result = recvfromMsg(s, dest_addr, response, prefix);
+    if (result == SOCKET_ERROR) {
+        return SOCKET_ERROR;
+    }
+
+    return result;
 }
 //TODO:performs recvfromMsg and then sendtoMsg, assuming all required WinSock2 previous calls were succesfull
 int recvfromsendtoMsg(SOCKET s, PDataPacket response, std::string prefix) {
-    return 0;
+    sockaddr_in* dest_addr;
+    int result = recvfromMsg(s, dest_addr, response, prefix);
+    if (result == SOCKET_ERROR) {
+        return SOCKET_ERROR;
+    }
+    result = sendtoMsg(s, dest_addr, response, prefix);
+    if (result == SOCKET_ERROR) {
+        return SOCKET_ERROR;
+    }
+    return result;
 }
