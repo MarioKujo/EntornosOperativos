@@ -4,7 +4,7 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <assert.h>
-#include "UDPMailboxLib.h"
+#include "..\UDPMailboxLib\UDPMailboxLib.h"
 #include <iostream>
 using namespace std;
 
@@ -51,8 +51,12 @@ int main()
     while (serve) {
         std::cout << "Server ready to recv" << std::endl;
         //TODO:recv msg, then cast it to DataPacket and call serverFun
-        
-
+        sockaddr_in client_addr;
+        int client_len = sizeof(client_addr);
+        int result = recvfromMsg(s, &client_addr, packet, "Server");
+        if (result != SOCKET_ERROR) {
+            serverFun(*packet, storage, s, client_addr);//Esto es solo para que se espere a tener conexión de un cliente antes de empezar a intentar enviar o recibir mensajes
+        }
     }
     std::cout << "Server: cleaning up and returning" << endl;
     // cleanup
@@ -64,18 +68,30 @@ int main()
 //TODO:prints clientPacket, then checks if clientPacket.msg is "Write" or "Read" and uses the following functions accordingly
 int serverFun(DataPacket clientPacket, PDataPacket storage, SOCKET s, sockaddr_in client_addr) {
     cout << "ClientPacket: " << clientPacket << endl;
-    int res = 0;
-    
-    return res;
+    if (strcmp(clientPacket.msg, "Write") == 0) {
+        return serverWrite(storage, s, client_addr);
+    }
+    else if (strcmp(clientPacket.msg, "Read") == 0) {
+        return serverRead(storage, s, client_addr);
+    }    
+    return 0;
 }
 
 //TODO:recvfrom next msg and stores it, also prints it
 int serverWrite(PDataPacket storage, SOCKET s, sockaddr_in client_addr) {
-    
-    return 0;
+    int result = recvfromMsg(s, &client_addr, storage, "Server");
+    if(result != SOCKET_ERROR)
+    {
+        cout << "Stored message: " << *storage << endl;
+    }
+    return result;
 }
 //TODO:sends the storage to the client and prints it
 int serverRead(PDataPacket storage, SOCKET s, sockaddr_in client_addr) {
-    
+    int result = sendtoMsg(s, &client_addr, storage, "Server");
+    if (result != SOCKET_ERROR)
+    {
+        cout << "Sent to client: " << *storage << endl;
+    }
     return 0;
 }

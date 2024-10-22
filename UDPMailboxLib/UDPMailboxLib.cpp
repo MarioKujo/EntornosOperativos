@@ -29,7 +29,7 @@ void treatErrorExit(const std::string msg, SOCKET s, int error) {
 //TODO:performs sendto, assuming all required WinSock2 previous calls were succesfull
 int sendtoMsg(SOCKET s, sockaddr_in* dest_addr, PDataPacket packet, std::string prefix) {
     //now we just send the data through the socket
-    int result = sendto(s, (char*)&packet, sizeof(DataPacket), 0, (SOCKADDR*)&dest_addr, sizeof(SOCKADDR));
+    int result = sendto(s, (char*)packet, sizeof(DataPacket), 0, (SOCKADDR*)dest_addr, sizeof(sockaddr_in));
     if (result < 0) {
         treatError(format("{}: error while sending: ", prefix), s);
         return SOCKET_ERROR;
@@ -40,9 +40,9 @@ int sendtoMsg(SOCKET s, sockaddr_in* dest_addr, PDataPacket packet, std::string 
 }
 //TODO:performs recvfrom, assuming all required WinSock2 previous calls were succesfull
 int recvfromMsg(SOCKET s, sockaddr_in* sender_addr, PDataPacket response, std::string prefix) {
-    int fromlen = sizeof(sender_addr);
+    int fromlen = sizeof(sockaddr_in);
     //receive response
-    int result = recvfrom(s, (char*)&response, sizeof(DataPacket), 0, (SOCKADDR*)&sender_addr, &fromlen);
+    int result = recvfrom(s, (char*)response, sizeof(DataPacket), 0, (SOCKADDR*)sender_addr, &fromlen);
     if (result == SOCKET_ERROR) {
         treatError(format("{}: error while receiving: ", prefix), s);
         return SOCKET_ERROR;
@@ -52,7 +52,7 @@ int recvfromMsg(SOCKET s, sockaddr_in* sender_addr, PDataPacket response, std::s
 
 //TODO:performs sendtoMsg and then recvfromMsg, assuming all required WinSock2 previous calls were succesfull
 int sendtorecvfromMsg(SOCKET s, sockaddr_in* dest_addr, PDataPacket packet, PDataPacket response, std::string prefix) {
-    int result= sendtoMsg(s, dest_addr, packet, prefix);
+    int result = sendtoMsg(s, dest_addr, packet, prefix);
     if (result == SOCKET_ERROR) {
         return SOCKET_ERROR;
     }
