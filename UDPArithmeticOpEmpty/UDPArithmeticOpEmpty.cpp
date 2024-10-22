@@ -4,7 +4,7 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <assert.h>
-#include "UDPArithmeticOpLib.h"
+#include "..\UDPArithmeticOpLibEmpty\UDPArithmeticOpLib.h"
 #include <iostream>
 #include <string>
 #include <Windows.h>
@@ -47,8 +47,11 @@ int main(int argc, char* argv[])
     cout << "ops: " << ops[0] << endl;
     for (int i = 0; i < MAX_MSGS; i++) {
         //TODO:create packet and allocate for response
+        DataPacket packet(client, i, rand() % 100, ops[i], rand() % 100);
+        DataPacket response;
         //TODO: send operation and receive response
-        
+        sendtorecvfromMsg(s, &server_addr, &packet, &response, "Client");
+        cout << "Response from server: " << response << endl;
     }
 
     std::cout << "Client finishing..." << std::endl;

@@ -4,7 +4,7 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <assert.h>
-#include "UDPArithmeticOpLib.h"
+#include "..\UDPArithmeticOpLibEmpty\UDPArithmeticOpLib.h"
 #include <iostream>
 #include <math.h>
 using namespace std;
@@ -54,10 +54,14 @@ int main()
     while (true) {
         std::cout << "Server ready to recv" << std::endl;
         //TODO:recv msg, then cast it to DataPacket and call serverFun
-        
+        sockaddr_in client_addr;
+        int addr_len = sizeof(client_addr);
+        result = recvfromMsg(s, &client_addr, packet, "Server");
+        if (result == SOCKET_ERROR) {
+            continue;
+        }
         //TODO:do something with serverFun
-        
-
+        serverFun(packet, s, client_addr);
     }
     std::cout << "Server: cleaning up and returning" << endl;
     // cleanup
@@ -68,6 +72,41 @@ int main()
 //makes operation with op1 and op2 storing the result in res, all of them fields of clientPacket
 int serverFun(PDataPacket clientPacket, SOCKET s, sockaddr_in client_addr) {
     //TODO
-    cout << "Operation performed: " << *clientPacket << endl;
+    long long result = 0;
+
+    switch (clientPacket->operation) {
+    case SUM:
+        result = clientPacket->op1 + clientPacket->op2;
+        break;
+    case DIFF:
+        result = clientPacket->op1 - clientPacket->op2;
+        break;
+    case PROD:
+        result = clientPacket->op1 * clientPacket->op2;
+        break;
+    case DIV:
+        if (clientPacket->op2 != 0) {
+            result = clientPacket->op1 / clientPacket->op2;
+        }
+        else {
+            std::cout << "Division by zero!" << std::endl;
+            return -1; // Manejo de error
+        }
+        break;
+    case POWER:
+        result = static_cast<long long>(pow(clientPacket->op1, clientPacket->op2));
+        break;
+    default:
+        std::cout << "Unknown operation!" << std::endl;
+        return -1; // Manejo de error
+    }
+
+    // Guardar el resultado en el paquete
+    clientPacket->res = result;
+
+    // Enviar de vuelta la respuesta
+    sendtoMsg(s, &client_addr, clientPacket, "Server");
+    std::cout << "Sent result: " << clientPacket->res << " for operation: " << *clientPacket << std::endl;
+
     return 0;
 }
