@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="UDPMailboxServer.cpp">
+    <ClCompile Include="UDPArithmeticOpServerEmpty.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>

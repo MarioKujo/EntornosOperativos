@@ -21,10 +21,9 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{73cbd42f-78a3-4647-ae57-1e08301fa44b}</ProjectGuid>
-    <RootNamespace>UDPMailbox</RootNamespace>
+    <ProjectGuid>{04430d72-9f7d-45ba-a613-23266c95e079}</ProjectGuid>
+    <RootNamespace>UDPArithmeticOpServerEmpty</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>UDPMailboxClient</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -77,7 +76,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\UDPMailbox\UDPMailboxLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\UDPArithmeticOpEmpty\UDPArithmeticOpLibEmpty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -106,8 +106,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Alumno.DESKTOP-GV16N45.000\Desktop\UDPMailbox\UDPMailboxLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\UDPArithmeticOpEmpty\UDPArithmeticOpLibEmpty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,11 +131,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="UDPMailbox.cpp" />
+    <ClCompile Include="UDPArithmeticOpServerEmpty.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UDPMailboxLib\UDPMailboxLib.vcxproj">
-      <Project>{f24525c8-69ba-4cd3-b166-8f514bcaf16f}</Project>
+    <ProjectReference Include="..\UDPArithmeticOpLibEmpty\UDPArithmeticOpLibEmpty.vcxproj">
+      <Project>{638c8afe-696a-4915-8143-fe7e0ad81cbb}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

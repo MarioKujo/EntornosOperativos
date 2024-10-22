@@ -4,12 +4,12 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <assert.h>
-#include "..\UDPMailboxLib\UDPMailboxLib.h"
+#include "UDPArithmeticOpLib.h"
 #include <iostream>
 #include <string>
 #include <Windows.h>
 
-#define MAX_MSGS 7
+#define MAX_MSGS 5
 using namespace std;
 
 int main(int argc, char* argv[])
@@ -29,7 +29,6 @@ int main(int argc, char* argv[])
 
     //now we create a socket that uses IP (AF_INET) with UDP (SOCK_DGRAM and IPPROTO_UDP) 
     SOCKET s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    //assert(s != INVALID_SOCKET);
     if (s == INVALID_SOCKET) {
         treatErrorExit("Client: Socket creation error: ", s, -1);
     }
@@ -43,38 +42,13 @@ int main(int argc, char* argv[])
     }
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(4000);
-    if (inet_pton(AF_INET, "127.0.0.1", &server_addr.sin_addr) <= 0) {
-        std::cout << "Invalid address/ Address not supported" << std::endl;
-        return -1;
-    }
-    string write = "Write";
-    string read = "Read";
-    std::string msgs[MAX_MSGS] = { write, "Hola", read, read, write, "Adios", read };
+
+    enum Operation ops[MAX_MSGS] = { SUM, DIFF, PROD, DIV, POWER };
+    cout << "ops: " << ops[0] << endl;
     for (int i = 0; i < MAX_MSGS; i++) {
-        std::cout << "Client ready to send: " << msgs[i] << std::endl;
-        //TODO:
-        //create packet and allocate for response
-        DataPacket packet(client, i, msgs[i]);
-        DataPacket response;
-        //when reading send Read and recv the msg from server printing it
-        if (msgs[i] == "Read") {
-            if (i - 1 >= 0 && msgs[i - 1] != "Read")
-            {
-                sendtorecvfromMsg(s, &server_addr, &packet, &response, "Client");
-                if (response.msg != NULL) {
-                    cout << "Response from server: " << response << endl;
-                }
-            }
-        }
-        //else just send the Write and the msg-to-write in 2 consecutive msgs
-        else if (msgs[i] == "Write") {
-            sendtoMsg(s, &server_addr, &packet, "Client");
-            if (i + 1 < MAX_MSGS) {
-                DataPacket tempPacket(client, i + 1, msgs[i + 1]);
-                sendtoMsg(s, &server_addr, &tempPacket, "Client");
-                i++;
-            }
-        }
+        //TODO:create packet and allocate for response
+        //TODO: send operation and receive response
+        
     }
 
     std::cout << "Client finishing..." << std::endl;
