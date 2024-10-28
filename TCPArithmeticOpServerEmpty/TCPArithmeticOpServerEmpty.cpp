@@ -4,11 +4,11 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <assert.h>
-#include "TCPArithmeticOpLibEmpty.h"
+#include "..\TCPArithmeticOpLibEmpty\TCPArithmeticOpLibEmpty.h"
 #include <iostream>
 using namespace std;
 
-int serverFun(PDataPacket clientPacket);
+int serverFun(SOCKET acceptSocket, PDataPacket clientPacket);
 
 
 int main()
@@ -72,10 +72,9 @@ int main()
             if (rbyteCount < 0) {//if any error occurrs, try to recv again
                 continue;
             }
-            
 
             //TODO:do something calling serverFun
-
+            serverFun(acceptSocket, packet);
         }//if the client stops sending msgs, its socket will be closed, and acceptSocket will also be closed
     }
     // Check for successful connection
@@ -89,7 +88,41 @@ int main()
 }
 
 //TODO: makes operation with op1 and op2 storing the result in res, all of them fields of clientPacket
-int serverFun(PDataPacket clientPacket) {
-    
+int serverFun(SOCKET acceptSocket, PDataPacket clientPacket) {
+    long long result = 0;
+
+    switch (clientPacket->operation) {
+    case SUM:
+        result = clientPacket->op1 + clientPacket->op2;
+        break;
+    case DIFF:
+        result = clientPacket->op1 - clientPacket->op2;
+        break;
+    case PROD:
+        result = clientPacket->op1 * clientPacket->op2;
+        break;
+    case DIV:
+        if (clientPacket->op2 != 0) {
+            result = clientPacket->op1 / clientPacket->op2;
+        }
+        else {
+            std::cout << "Division by zero!" << std::endl;
+            return -1; // Manejo de error
+        }
+        break;
+    case POWER:
+        result = static_cast<long long>(pow(clientPacket->op1, clientPacket->op2));
+        break;
+    default:
+        std::cout << "Unknown operation!" << std::endl;
+        return -1; // Manejo de error
+    }
+
+    // Guardar el resultado en el paquete
+    clientPacket->res = result;
+
+    // Enviar de vuelta la respuesta
+    std::cout << "Sent result: " << clientPacket->res << " for operation: " << *clientPacket << std::endl;
+    sendMsg(acceptSocket, clientPacket, "Server");
     return 0;
 }

@@ -4,7 +4,7 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <assert.h>
-#include "TCPArithmeticOpLibEmpty.h"
+#include "..\TCPArithmeticOpLIbEmpty\TCPArithmeticOpLibEmpty.h"
 #include <iostream>
 #include <string>
 #include <Windows.h>
@@ -56,9 +56,11 @@ int main(int argc, char* argv[])
     enum Operation ops[MAX_MSGS] = { SUM, DIFF, PROD, DIV, POWER };
     for (int i = 0; i < MAX_MSGS; i++) {
         //TODO:create packet and allocate for response
-        
+        DataPacket packet(client, i, rand() % 100, ops[i], rand() % 100);
+        DataPacket response;
         //TODO:send packet and receive response
-        
+        sendrecvMsg(s, &packet, &response, "Client");
+        cout << "Response from server: " << response << endl;
     }
 
     std::cout << "Client finishing..." << std::endl;
