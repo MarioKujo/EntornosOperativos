@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     //now we create a socket that uses IP (AF_INET) with TCP (SOCK_STREAM and IPPROTO_TCP) 
     SOCKET s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     //assert(s != INVALID_SOCKET);
-    if (result == INVALID_SOCKET) {
+    if (s == INVALID_SOCKET) {
         treatErrorExit("Client: Socket creation error: ", s, -1);
     }
     std::cout << "Client: socket created" << std::endl;
@@ -59,12 +59,29 @@ int main(int argc, char* argv[])
     for (int i = 0; i < MAX_MSGS; i++) {
         std::cout << "Client ready to send: " << msgs[i] << std::endl;
         //TODO:create packet and allocate for response
-        
+        DataPacket packet(client, i, msgs[i]);
+        DataPacket response;
         //cout << "new packet " << *packet << endl;
         
         //TODO:when reading send Read and recv the msg from server printing it
+        if (msgs[i] == "Read") {
+            if (sendrecvMsg(s, &packet, &response, "Client") != SOCKET_ERROR) {
+                if (strlen(response.msg) > 0) {
+                    std::cout << "Response from server: " << response << std::endl;
+                }
+            }
+        }
         //else just send the Write and the msg to write in 2 consecutive msgs
-        
+        else if (msgs[i] == "Write") {
+            if (sendMsg(s, &packet, "Client") != SOCKET_ERROR) {
+                if (i + 1 < MAX_MSGS) {
+                    DataPacket tempPacket(client, i + 1, msgs[i + 1]);
+                    sendMsg(s, &tempPacket, "Client");
+                    std::cout << "Client sent data to store: " << msgs[i + 1] << std::endl;
+                    i++;
+                }
+            }
+        }
     }
 
     std::cout << "Client finishing..." << std::endl;
