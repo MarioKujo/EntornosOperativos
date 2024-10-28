@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{a2cfc6a6-ea5e-4de2-b8a2-1e969c1a6390}</ProjectGuid>
-    <RootNamespace>TCPMailboxLibEmpty</RootNamespace>
+    <ProjectGuid>{dd5de77e-c3d0-4bcd-8e71-6b4ae8018ef7}</ProjectGuid>
+    <RootNamespace>TCPArithmeticOpLibEmpty</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -142,8 +142,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
-    <ClInclude Include="TCPMailboxLibEmpty.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="TCPArithmeticOpLibEmpty.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -152,7 +152,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TCPMailboxLibEmpty.cpp" />
+    <ClCompile Include="TCPArithmeticOpLibEmpty.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

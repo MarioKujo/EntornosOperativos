@@ -10,24 +10,32 @@
 
 #define MSG_SIZE 256
 
+enum Operation
+{
+    SUM, DIFF, PROD, DIV, POWER
+};
+
 typedef class DataPacket {
 public:
     int client_id;
     int sequence;
-    char msg[MSG_SIZE];
-    DataPacket() {
-        client_id = 0;
-        sequence = 0;
-        memset(msg, 0, MSG_SIZE); //clear all the memory in packet.msg before copying a new msg
-    }
-    DataPacket(int _client_id, int _sequence, std::string _msg) {
+    int op1;
+    enum Operation operation;
+    //int operation;
+    int op2;
+    long long res;
+    DataPacket() {};
+    DataPacket(int _client_id, int _sequence, int _op1, enum Operation _operation, int _op2) {
+        //DataPacket(int _client_id, int _sequence, int _op1, int _operation, int _op2) {
         client_id = _client_id;
         sequence = _sequence;
-        //deep copy of string into the struct so that data reaches the server, NEVER send a pointer / shallow copy
-        memset(msg, 0, MSG_SIZE); //clear all the memory in packet.msg before copying a new msg
-        _msg.copy(msg, _msg.size(), 0);
+        op1 = _op1;
+        operation = _operation;
+        op2 = _op2;
+        res = INFINITE;
     }
 } *PDataPacket;
+
 
 
 std::ostream& operator << (std::ostream& os, const DataPacket& dp);

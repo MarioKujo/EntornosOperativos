@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{0cc17d3a-4069-4ab1-bca2-7b158516d596}</ProjectGuid>
-    <RootNamespace>TCPMailboxServerEmpty</RootNamespace>
+    <ProjectGuid>{62de27c0-8428-4984-98a3-0422afe3cf7a}</ProjectGuid>
+    <RootNamespace>TCPArithmeticOpEmpty</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -76,7 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\TCPMailboxEmpty\TCPMailboxLibEmpty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\TCPArithmeticOpEmpty\TCPArithmeticOpLibEmpty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -106,7 +106,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\TCPMailboxEmpty\TCPMailboxLibEmpty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\TCPArithmeticOpEmpty\TCPArithmeticOpLibEmpty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -131,11 +131,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="TCPMailboxServerEmpty.cpp" />
+    <ClCompile Include="TCPArithmeticOpEmpty.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TCPMailboxLibEmpty\TCPMailboxLibEmpty.vcxproj">
-      <Project>{a2cfc6a6-ea5e-4de2-b8a2-1e969c1a6390}</Project>
+    <ProjectReference Include="..\TCPArithmeticOpLibEmpty\TCPArithmeticOpLibEmpty.vcxproj">
+      <Project>{dd5de77e-c3d0-4bcd-8e71-6b4ae8018ef7}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
