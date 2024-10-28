@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{c450d4e3-fdea-4388-9eef-92d45e4d0ccd}</ProjectGuid>
-    <RootNamespace>UDPServer</RootNamespace>
+    <ProjectGuid>{fbd5c80a-fb47-4c6b-a92b-207ff212b055}</ProjectGuid>
+    <RootNamespace>TCPMailboxEmpty</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -76,7 +76,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\UDPsockets\UDPLib1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\TCPMailboxEmpty\TCPMailboxLibEmpty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,7 +106,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Alumno.DESKTOP-GV16N45.000\Documents\GitHub\EntorrnosOperativosParte2\UDPLib1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\TCPMailboxEmpty\TCPMailboxLibEmpty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,11 +131,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="UDPServer.cpp" />
+    <ClCompile Include="TCPMailboxEmpty.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UDPLib1\UDPLib1.vcxproj">
-      <Project>{fd60595f-7c65-43bc-9618-13b7762b42af}</Project>
+    <ProjectReference Include="..\TCPMailboxLibEmpty\TCPMailboxLibEmpty.vcxproj">
+      <Project>{a2cfc6a6-ea5e-4de2-b8a2-1e969c1a6390}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
