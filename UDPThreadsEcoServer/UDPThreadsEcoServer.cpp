@@ -4,7 +4,7 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <assert.h>
-#include "..\UDPMailboxLib\UDPMailboxLib.h"
+#include "..\UDPThreadsEcoLib\UDPThreadsEcoLib.h"
 #include <iostream>
 using namespace std;
 
