@@ -21,10 +21,9 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{b2e0c104-56fb-45d1-8e85-4a7b38e0e5ff}</ProjectGuid>
-    <RootNamespace>UDPMailboxServer</RootNamespace>
+    <ProjectGuid>{0a89b4af-edf9-49e8-99cf-50d5b0be7d87}</ProjectGuid>
+    <RootNamespace>UDPThreadsProjectServer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>UDPThreadsEcoServer</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -77,7 +76,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\UDPMailbox\UDPMailboxLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\UDPThreadsProject\UDPThreadsProjectLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -106,13 +106,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\CARPETAS DEL SISTEMA\Documentos\GitHub\EntornosOperativosParte2\UDPThreadsEcoLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\UDPThreadsProject\UDPThreadsProjectLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>UDPThreadsEcoLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\CARPETAS DEL SISTEMA\Documentos\GitHub\EntornosOperativosParte2\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -132,11 +131,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="UDPThreadsEcoServer.cpp" />
+    <ClCompile Include="UDPThreadsProjectServer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UDPMailboxLib\UDPMailboxLib.vcxproj">
-      <Project>{f24525c8-69ba-4cd3-b166-8f514bcaf16f}</Project>
+    <ProjectReference Include="..\UDPThreadsProjectLib\UDPThreadsProjectLib.vcxproj">
+      <Project>{47d9e903-ff4c-46be-aff1-c588848d9c4f}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
