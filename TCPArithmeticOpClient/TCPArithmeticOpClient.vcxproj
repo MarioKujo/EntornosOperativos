@@ -21,9 +21,10 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{2e6457c1-cb36-4feb-9b0b-e6d4fea25061}</ProjectGuid>
-    <RootNamespace>TCPArithmeticOpServerEmpty</RootNamespace>
+    <ProjectGuid>{62de27c0-8428-4984-98a3-0422afe3cf7a}</ProjectGuid>
+    <RootNamespace>TCPArithmeticOpEmpty</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>TCPArithmeticOpClient</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -76,8 +77,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\TCPArithmeticOpEmpty\TCPArithmeticOpLibEmpty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -106,8 +107,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\TCPArithmeticOpEmpty\TCPArithmeticOpLibEmpty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,10 +132,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="TCPArithmeticOpServerEmpty.cpp" />
+    <ClCompile Include="TCPArithmeticOpClient.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TCPArithmeticOpLibEmpty\TCPArithmeticOpLibEmpty.vcxproj">
+    <ProjectReference Include="..\TCPArithmeticOpLib\TCPArithmeticOpLib.vcxproj">
       <Project>{dd5de77e-c3d0-4bcd-8e71-6b4ae8018ef7}</Project>
     </ProjectReference>
   </ItemGroup>

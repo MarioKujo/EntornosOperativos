@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TCPArithmeticOpClientEmpty.cpp">
+    <ClCompile Include="TCPArithmeticOpClient.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
