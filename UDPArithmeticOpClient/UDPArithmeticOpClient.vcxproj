@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{04430d72-9f7d-45ba-a613-23266c95e079}</ProjectGuid>
-    <RootNamespace>UDPArithmeticOpServerEmpty</RootNamespace>
+    <ProjectGuid>{0d498791-c9dd-4a41-9c44-49859af9e757}</ProjectGuid>
+    <RootNamespace>UDPArithmeticOpEmpty</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -76,8 +76,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\UDPArithmeticOpEmpty\UDPArithmeticOpLibEmpty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -106,8 +106,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>C:\Users\LuisMiguelDanielsson\source\repos\UDPArithmeticOpEmpty\UDPArithmeticOpLibEmpty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,10 +131,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="UDPArithmeticOpServerEmpty.cpp" />
+    <ClCompile Include="UDPArithmeticOpClient.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UDPArithmeticOpLibEmpty\UDPArithmeticOpLibEmpty.vcxproj">
+    <ProjectReference Include="..\UDPArithmeticOpLib\UDPArithmeticOpLib.vcxproj">
       <Project>{638c8afe-696a-4915-8143-fe7e0ad81cbb}</Project>
     </ProjectReference>
   </ItemGroup>

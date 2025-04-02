@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="UDPArithmeticOpEmpty.cpp">
+    <ClCompile Include="UDPArithmeticOpClient.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>

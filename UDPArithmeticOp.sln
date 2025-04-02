@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UDPArithmeticOpEmpty", "UDPArithmeticOpEmpty\UDPArithmeticOpEmpty.vcxproj", "{0D498791-C9DD-4A41-9C44-49859AF9E757}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UDPArithmeticOpLib", "UDPArithmeticOpLib\UDPArithmeticOpLib.vcxproj", "{638C8AFE-696A-4915-8143-FE7E0AD81CBB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UDPArithmeticOpServerEmpty", "UDPArithmeticOpServerEmpty\UDPArithmeticOpServerEmpty.vcxproj", "{04430D72-9F7D-45BA-A613-23266C95E079}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UDPArithmeticOpClient", "UDPArithmeticOpClient\UDPArithmeticOpClient.vcxproj", "{0D498791-C9DD-4A41-9C44-49859AF9E757}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UDPArithmeticOpLibEmpty", "UDPArithmeticOpLibEmpty\UDPArithmeticOpLibEmpty.vcxproj", "{638C8AFE-696A-4915-8143-FE7E0AD81CBB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UDPArithmeticOpServer", "UDPArithmeticOpServer\UDPArithmeticOpServer.vcxproj", "{04430D72-9F7D-45BA-A613-23266C95E079}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +17,14 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Debug|x64.ActiveCfg = Debug|x64
+		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Debug|x64.Build.0 = Debug|x64
+		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Debug|x86.ActiveCfg = Debug|Win32
+		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Debug|x86.Build.0 = Debug|Win32
+		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Release|x64.ActiveCfg = Release|x64
+		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Release|x64.Build.0 = Release|x64
+		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Release|x86.ActiveCfg = Release|Win32
+		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Release|x86.Build.0 = Release|Win32
 		{0D498791-C9DD-4A41-9C44-49859AF9E757}.Debug|x64.ActiveCfg = Debug|x64
 		{0D498791-C9DD-4A41-9C44-49859AF9E757}.Debug|x64.Build.0 = Debug|x64
 		{0D498791-C9DD-4A41-9C44-49859AF9E757}.Debug|x86.ActiveCfg = Debug|Win32
@@ -33,14 +41,6 @@ Global
 		{04430D72-9F7D-45BA-A613-23266C95E079}.Release|x64.Build.0 = Release|x64
 		{04430D72-9F7D-45BA-A613-23266C95E079}.Release|x86.ActiveCfg = Release|Win32
 		{04430D72-9F7D-45BA-A613-23266C95E079}.Release|x86.Build.0 = Release|Win32
-		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Debug|x64.ActiveCfg = Debug|x64
-		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Debug|x64.Build.0 = Debug|x64
-		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Debug|x86.ActiveCfg = Debug|Win32
-		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Debug|x86.Build.0 = Debug|Win32
-		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Release|x64.ActiveCfg = Release|x64
-		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Release|x64.Build.0 = Release|x64
-		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Release|x86.ActiveCfg = Release|Win32
-		{638C8AFE-696A-4915-8143-FE7E0AD81CBB}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
