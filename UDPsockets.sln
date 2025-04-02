@@ -7,7 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UDPClient", "UDPClient\UDPC
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UDPServer", "UDPServer\UDPServer.vcxproj", "{C450D4E3-FDEA-4388-9EEF-92D45E4D0CCD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UDPLib1", "UDPLib1\UDPLib1.vcxproj", "{FD60595F-7C65-43BC-9618-13B7762B42AF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UDPLib", "UDPLib\UDPLib.vcxproj", "{FD60595F-7C65-43BC-9618-13B7762B42AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

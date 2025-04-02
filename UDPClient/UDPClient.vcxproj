@@ -132,7 +132,7 @@
     <ClCompile Include="UDPClient.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UDPLib1\UDPLib1.vcxproj">
+    <ProjectReference Include="..\UDPLib\UDPLib.vcxproj">
       <Project>{fd60595f-7c65-43bc-9618-13b7762b42af}</Project>
     </ProjectReference>
   </ItemGroup>
