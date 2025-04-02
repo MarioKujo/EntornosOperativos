@@ -4,7 +4,7 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <assert.h>
-#include "..\TCPMailboxLibEmpty\TCPMailboxLibEmpty.h"
+#include "../TCPMailboxLib/TCPMailboxLib.h"
 #include <iostream>
 using namespace std;
 

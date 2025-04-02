@@ -131,10 +131,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="TCPMailboxServerEmpty.cpp" />
+    <ClCompile Include="TCPMailboxServer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TCPMailboxLibEmpty\TCPMailboxLibEmpty.vcxproj">
+    <ProjectReference Include="..\TCPMailboxLib\TCPMailboxLib.vcxproj">
       <Project>{a2cfc6a6-ea5e-4de2-b8a2-1e969c1a6390}</Project>
     </ProjectReference>
   </ItemGroup>
