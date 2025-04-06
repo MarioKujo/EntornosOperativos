@@ -19,13 +19,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Code\Threads Ej4.cpp" />
+    <ClCompile Include="..\Code\Cell.cpp" />
+    <ClCompile Include="..\Code\Game.cpp" />
+    <ClCompile Include="..\Code\main.cpp" />
+    <ClCompile Include="..\Code\Map.cpp" />
+    <ClCompile Include="..\Code\Player.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Code\Cell.hpp" />
+    <ClInclude Include="..\Code\Game.hpp" />
+    <ClInclude Include="..\Code\Map.hpp" />
+    <ClInclude Include="..\Code\Player.hpp" />
+    <ClInclude Include="..\Code\Position.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{50543cf5-01a5-4519-992e-51138a6a97aa}</ProjectGuid>
-    <RootNamespace>ThreadsEj4</RootNamespace>
+    <ProjectGuid>{4dc79195-d07f-4942-bea2-c5429233899e}</ProjectGuid>
+    <RootNamespace>Game</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
