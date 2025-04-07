@@ -15,21 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Code\framework.h">
+    <ClInclude Include="..\Code\Lib\framework.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\Lib.h">
+    <ClInclude Include="..\Code\Lib\Lib.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\pch.h">
+    <ClInclude Include="..\Code\Lib\pch.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Code\Lib.cpp">
+    <ClCompile Include="..\Code\Lib\Lib.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\pch.cpp">
+    <ClCompile Include="..\Code\Lib\pch.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>

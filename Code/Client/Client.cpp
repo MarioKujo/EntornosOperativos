@@ -4,7 +4,7 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <assert.h>
-#include "Lib.h"
+#include "../Lib/Lib.h"
 #include <iostream>
 #include <string>
 #include <Windows.h>

@@ -19,13 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Code\framework.h" />
-    <ClInclude Include="..\Code\Lib.h" />
-    <ClInclude Include="..\Code\pch.h" />
+    <ClInclude Include="..\Code\Lib\framework.h" />
+    <ClInclude Include="..\Code\Lib\Lib.h" />
+    <ClInclude Include="..\Code\Lib\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Code\Lib.cpp" />
-    <ClCompile Include="..\Code\pch.cpp">
+    <ClCompile Include="..\Code\Lib\Lib.cpp" />
+    <ClCompile Include="..\Code\Lib\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
