@@ -4,7 +4,7 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <assert.h>
-#include "../UDPThreadsProjectLib/UDPThreadsProjectLib.h"
+#include "Lib.h"
 #include <iostream>
 #include <math.h>
 #include <format>
@@ -16,7 +16,6 @@ HANDLE serverFun(PDataPacket clientPacket, SOCKET s, sockaddr_in* client_addr, i
 int serverThreadFun(PDataPacket clientPacket);
 
 DWORD WINAPI threadFun(LPVOID param);
-
 
 int main()
 {

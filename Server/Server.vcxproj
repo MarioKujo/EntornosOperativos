@@ -131,10 +131,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="UDPThreadsProjectServer.cpp" />
+    <ClCompile Include="..\Code\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UDPThreadsProjectLib\UDPThreadsProjectLib.vcxproj">
+    <ProjectReference Include="..\Lib\Lib.vcxproj">
       <Project>{47d9e903-ff4c-46be-aff1-c588848d9c4f}</Project>
     </ProjectReference>
   </ItemGroup>
