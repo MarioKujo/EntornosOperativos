@@ -137,13 +137,12 @@ HANDLE serverFun(PDataPacket clientPacket, SOCKET s, sockaddr_in* client_addr, i
 
     return hThread;
 }
-
+Game game(10, 10, 5, 30);
 //function of dedicated thread in the server for a specific client
 DWORD WINAPI threadFun(LPVOID param) {
     PThreadInfo thInfo = (ThreadInfo*)param;
     bool serve = true;
     PDataPacket packet = new DataPacket();
-    Game game;
     while (serve) {
         std::cout << "Server Thread ready to recv" << std::endl;
         //recv msg, then cast it to DataPacket and call serverFun
@@ -172,6 +171,8 @@ DWORD WINAPI threadFun(LPVOID param) {
 //makes operation with op1 and op2 storing the result in res, all of them fields of clientPacket
 int serverThreadFun(PDataPacket clientPacket) {
     cout << "Server received packet" << endl;
+    Player player;
+    int x = 0, y = 0;
     switch (clientPacket->operation)
     {
         case MOVE:
@@ -182,6 +183,10 @@ int serverThreadFun(PDataPacket clientPacket) {
         break;
         case INSPECT:
         {
+            if (game.getMap().getCell(clientPacket->position.x, clientPacket->position.y).isDug)
+            {
+
+            }
             cout << "Player needs to inspect" << endl;
         }
         break;
@@ -211,7 +216,14 @@ int serverThreadFun(PDataPacket clientPacket) {
         }
         break;
     }
-    clientPacket->currentTurn++;
+    if(clientPacket->currentTurn != clientPacket->maxTurns)
+    {
+        clientPacket->currentTurn++;
+    }
+    else
+    {
+        clientPacket->isRunning = false;
+    }
     return 0;
 }
 

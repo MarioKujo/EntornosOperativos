@@ -19,18 +19,22 @@ typedef class DataPacket {
 public:
     int client_id;
     enum Operation operation;
-    int dx, dy;
+    int dx, dy; // Only for Moving
+    bool isDug; // Only for inspecting
     int currentTurn;
+    int maxTurns;
     bool isRunning;
     Position position;
-    DataPacket() :client_id(0), operation(MOVE), dx(0), dy(0), currentTurn(0), isRunning(false), position {0, 0} {};
-    DataPacket(int _client_id, enum Operation _operation, int _dx, int _dy, int _currentTurn, bool _isRunning, Position _position) {
+    DataPacket() :client_id(0), operation(MOVE), dx(0), dy(0), currentTurn(0), maxTurns(0), isRunning(false), position{0, 0}, isDug(false) {};
+    DataPacket(int _client_id, enum Operation _operation, int _dx, int _dy, int _currentTurn, int _maxTurns, bool _isRunning, Position _position, bool _isDug) {
         client_id = _client_id;
         operation = _operation;
         position = _position;
         dx = _dx;
         dy = _dy;
+        isDug = _isDug;
         currentTurn = _currentTurn;
+        maxTurns = _maxTurns;
         isRunning = _isRunning;
     }
 } *PDataPacket;

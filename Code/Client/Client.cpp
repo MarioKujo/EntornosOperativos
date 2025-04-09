@@ -51,27 +51,41 @@ int main(int argc, char* argv[])
     enum Operation ops = MOVE;
     Game game(10, 10, 30);
     game.run();
-    while (game.getIsRunning() && game.getCurrentTurn() < game.getTurnLimit() && (game.getPlayer().getEnergy() > 0))
+    system("CLS");
+    bool isRunning = true;
+    while (isRunning)
     {
-        system("CLS");
         game.run();
         int action;
         cin >> action;
-        action--;
         int x = 0, y = 0;
-        if (action == 0)
+        if (action == 1)
         {
-            cout << "Introduce el desplazamiento de x: ";
+            cout << "x displacement: ";
             cin >> x;
-            cout << "Introduce el desplazamiento de y: ";
+            cout << "y displacement: ";
             cin >> y;
         }
-        PDataPacket packet = new DataPacket(client, static_cast<Operation>(action), x, y, game.getCurrentTurn(), game.getIsRunning(), game.getPlayer().getPosition());
+        PDataPacket packet = new DataPacket(client, static_cast<Operation>(action - 1), x, y,
+            game.getCurrentTurn(), game.getTurnLimit(), game.getIsRunning(),
+            game.getPlayer().getPosition(), false);
         PDataPacket response = new DataPacket();
         sendtorecvfromMsg(s, &server_addr, packet, response, prefix);
         Player player;
         player.setPosition(response->position);
         game.setPlayer(player);
+        game.setCurrentTurn(response->currentTurn);
+        if (action == 2)
+        {
+            if (response->isDug)
+            {
+                cout << "There's nothing here." << endl;
+            }
+            if (!response->isDug)
+            {
+                cout << "Cell hasn't been dug" << endl;
+            }
+        }
     }
     std::cout << "Client finishing..." << std::endl;
     int iResult = closesocket(s);

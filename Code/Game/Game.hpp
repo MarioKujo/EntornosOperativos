@@ -24,6 +24,6 @@ public:
     Player getPlayer();
     Map getMap();
 
+    void setCurrentTurn(int newTurn);
     void setPlayer(Player newVal);
-    void setMap(Map map);
 };

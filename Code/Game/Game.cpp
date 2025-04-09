@@ -28,14 +28,6 @@ void Game::processAction(int action)
 {
 	switch (action)
 	{
-		case 1:
-		{
-			int dx, dy;
-			cout << "Movement (insert 2 separate numbers: x movement and y movement): ";
-			cin >> dx >> dy;
-			player.move(dx, dy, map);
-		}
-		break;
 		case 2:
 		{
 			player.inspect(map);
@@ -102,6 +94,11 @@ Player Game::getPlayer()
 Map Game::getMap()
 {
 	return map;
+}
+
+void Game::setCurrentTurn(int newTurn)
+{
+	currentTurn = newTurn;
 }
 
 void Game::setPlayer(Player newVal)
