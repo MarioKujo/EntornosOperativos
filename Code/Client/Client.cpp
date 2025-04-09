@@ -55,11 +55,8 @@ int main(int argc, char* argv[])
     {
         system("CLS");
         game.run();
-        game.showMenu();
-        cout << "Before cin>>action" << endl;
         int action;
         cin >> action;
-        cout << "After cin>>action" << endl;
         action--;
         int x = 0, y = 0;
         if (action == 0)

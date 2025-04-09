@@ -171,46 +171,47 @@ DWORD WINAPI threadFun(LPVOID param) {
 
 //makes operation with op1 and op2 storing the result in res, all of them fields of clientPacket
 int serverThreadFun(PDataPacket clientPacket) {
+    cout << "Server received packet" << endl;
     switch (clientPacket->operation)
     {
-    case MOVE:
-    {
-        clientPacket->position.x += clientPacket->dx;
-        clientPacket->position.y += clientPacket->dy;
+        case MOVE:
+        {
+            clientPacket->position.x += clientPacket->dx;
+            clientPacket->position.y += clientPacket->dy;
+        }
+        break;
+        case INSPECT:
+        {
+            cout << "Player needs to inspect" << endl;
+        }
+        break;
+        case DIG:
+        {
+            cout << "Player needs to dig" << endl;
+        }
+        break;
+        case USEMAP:
+        {
+            cout << "Player needs to use map" << endl;
+        }
+        break;
+        case PLACEFLAG:
+        {
+            cout << "Player needs to place flag" << endl;
+        }
+        break;
+        case EAT:
+        {
+            cout << "Player needs to eat" << endl;
+        }
+        break;
+        case EXIT:
+        {
+            cout << "Player needs to exit" << endl;
+        }
+        break;
     }
-    break;
-    case INSPECT:
-    {
-        cout << "Player needs to inspect" << endl;
-    }
-    break;
-    case DIG:
-    {
-        cout << "Player needs to dig" << endl;
-    }
-    break;
-    case USEMAP:
-    {
-        cout << "Player needs to use map" << endl;
-    }
-    break;
-    case PLACEFLAG:
-    {
-        cout << "Player needs to place flag" << endl;
-    }
-    break;
-    case EAT:
-    {
-        cout << "Player needs to eat" << endl;
-    }
-    break;
-    case EXIT:
-    {
-        cout << "Player needs to exit" << endl;
-    }
-    break;
-
-    }
+    clientPacket->currentTurn++;
     return 0;
 }
 
