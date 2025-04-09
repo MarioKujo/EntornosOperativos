@@ -25,17 +25,29 @@ public:
     int dx, dy; // Only for Moving
     bool isDug; // Only for inspecting
     enum CellDug cellDug; // Only for Digging
+    bool trapNearby;
+    bool treasureNearby;
     int energy;
     int currentTurn;
     int maxTurns;
     int treasuresFound;
     bool isRunning;
     Position position;
-    DataPacket() :client_id(0), operation(MOVE), cellDug(NOTHING), energy(0), dx(0), dy(0), currentTurn(0), maxTurns(0), treasuresFound(0), isRunning(false), position{0, 0}, isDug(false) {};
-    DataPacket(int _client_id, enum Operation _operation, enum CellDug _cellDug, int _energy, int _dx, int _dy, int _currentTurn, int _maxTurns,int _treasuresFound, bool _isRunning, Position _position, bool _isDug) {
+    DataPacket() :client_id(0), operation(MOVE), cellDug(NOTHING),
+        trapNearby(false), treasureNearby(false),
+        energy(0), dx(0), dy(0), 
+        currentTurn(0), maxTurns(0), treasuresFound(0),
+        isRunning(false), position{0, 0}, isDug(false) {};
+    DataPacket(int _client_id, enum Operation _operation, enum CellDug _cellDug,
+        bool _trapNearby, bool _treasureNearby,
+        int _energy, int _dx, int _dy, 
+        int _currentTurn, int _maxTurns,int _treasuresFound, 
+        bool _isRunning, Position _position, bool _isDug) {
         client_id = _client_id;
         operation = _operation;
         cellDug = _cellDug;
+        trapNearby = _trapNearby;
+        treasureNearby = _treasureNearby;
         energy = _energy;
         position = _position;
         dx = _dx;
@@ -53,7 +65,7 @@ public:
     int thread_id;
     SOCKET s;
     std::string prefix;
-    ThreadInfo() {};
+    ThreadInfo() :thread_id(0), s(INVALID_SOCKET), prefix("") {};
     ThreadInfo(int _thread_id, SOCKET _s, std::string _prefix) {
         thread_id = _thread_id;
         s = _s;

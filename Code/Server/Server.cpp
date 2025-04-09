@@ -175,11 +175,11 @@ int serverThreadFun(PDataPacket clientPacket) {
     Map map = game.getMap();
     int x = 0, y = 0;
     player.setEnergy(clientPacket->energy);
+    player.setPosition(clientPacket->position);
     switch (clientPacket->operation)
     {
         case MOVE:
         {
-            player.setPosition(clientPacket->position);
             player.move(clientPacket->dx, clientPacket->dy, map);
             clientPacket->energy = player.getEnergy();
             clientPacket->position = player.getPosition();
@@ -199,7 +199,6 @@ int serverThreadFun(PDataPacket clientPacket) {
         break;
         case DIG:
         {
-            player.setPosition(clientPacket->position);
             player.dig(map);
             clientPacket->isDug = true;
             clientPacket->energy = player.getEnergy();
@@ -223,7 +222,9 @@ int serverThreadFun(PDataPacket clientPacket) {
         break;
         case USEMAP:
         {
-            cout << "Player needs to use map" << endl;
+            player.useMap(map);
+            clientPacket->treasureNearby = player.getTreasureNearby();
+            clientPacket->trapNearby = player.getTrapNearby();
         }
         break;
         case PLACEFLAG:

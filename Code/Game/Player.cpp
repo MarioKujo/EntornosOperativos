@@ -13,11 +13,6 @@ void Player::move(int dx, int dy, const Map& map)
     {
         pos = newPos;
         energy -= 5;  // Decrease energy on movement
-        cout << "You have moved to (" << pos.x << ", " << pos.y << ")" << endl;
-    }
-    else
-    {
-        cout << "Invalid movement." << endl;  // Notify if the move is invalid
     }
 }
 
@@ -44,17 +39,14 @@ void Player::placeFlag(Map& map)
 {
     Cell& cell = map.getCell(pos.x, pos.y);  // Access the cell at the player's position
     cell.hasFlag = true;  // Mark the cell as flagged
-    cout << "You flagged this cell." << endl;
 }
 
 // Uses the map to check the area around the player for treasures or traps
-void Player::useMap(Map& map) const
+void Player::useMap(Map& map)
 {
     int range = 2;  // Range of cells to check around the player
-    bool treasureNearby = false;
-    bool trapNearby = false;
-
-    cout << "Searching..." << endl;
+    treasureNearby = false;
+    trapNearby = false;
 
     // Checks cells around the player within the range
     for (int dx = -range; dx <= range; ++dx)
@@ -80,24 +72,6 @@ void Player::useMap(Map& map) const
                 }
             }
         }
-    }
-
-    // Output hints based on nearby treasures or traps
-    if (treasureNearby && trapNearby)
-    {
-        cout << "Danger! Traps and treasures nearby." << endl;
-    }
-    else if (treasureNearby)
-    {
-        cout << "Treasure nearby! Keep looking." << endl;
-    }
-    else if (trapNearby)
-    {
-        cout << "Danger! Trap nearby!" << endl;
-    }
-    else
-    {
-        cout << "No signal of treasure nor traps nearby." << endl;
     }
 }
 
@@ -182,6 +156,16 @@ void Player::useSonar(Map& map) const
 // Getter methods for player energy and treasures found
 int Player::getEnergy() const { return energy; }
 int Player::getTreasuresFound() const { return treasuresFound; }
+
+bool Player::getTreasureNearby()
+{
+    return treasureNearby;
+}
+
+bool Player::getTrapNearby()
+{
+    return trapNearby;
+}
 
 // Setter methods for position and energy
 void Player::setPosition(Position newPosition)

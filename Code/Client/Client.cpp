@@ -55,6 +55,7 @@ int main(int argc, char* argv[])
     bool isRunning = true;
     int treasuresFound = 0;
     Player player = game.getPlayer();
+    bool treasureNearby = false, trapNearby = false;
     while (isRunning)
     {
         game.run();
@@ -68,16 +69,19 @@ int main(int argc, char* argv[])
             cout << "y displacement: ";
             cin >> y;
         }
-        PDataPacket packet = new DataPacket(client, static_cast<Operation>(action - 1), cd, player.getEnergy(), x, y,
-            game.getCurrentTurn(), game.getTurnLimit(), treasuresFound, game.getIsRunning(),
-            game.getPlayer().getPosition(), false);
+        PDataPacket packet = new DataPacket(client, static_cast<Operation>(action - 1), cd,
+            treasureNearby, trapNearby,
+            player.getEnergy(), x, y,
+            game.getCurrentTurn(), game.getTurnLimit(), treasuresFound,
+            game.getIsRunning(), game.getPlayer().getPosition(), false);
         PDataPacket response = new DataPacket();
         sendtorecvfromMsg(s, &server_addr, packet, response, prefix);
         player.setPosition(response->position);
         player.setEnergy(response->energy);
         game.setPlayer(player);
         game.setCurrentTurn(response->currentTurn);
-        
+        treasureNearby = response->treasureNearby;
+        trapNearby = response->trapNearby;
         Map map = game.getMap();
         Cell cell = map.getCell(player.getPosition().x, player.getPosition().y);
 		switch (action)
@@ -117,6 +121,26 @@ int main(int argc, char* argv[])
                     cout << "It's a trap!" << endl;
                 }
                 break;
+                }
+            }
+            break;
+            case 4:
+            {
+                if (trapNearby && treasureNearby)
+                {
+                    cout << "Be careful! There are traps and treasures nearby!" << endl;
+                }
+                else if (trapNearby)
+                {
+                    cout << "Danger! Trap nearby!" << endl;
+                }
+                else if(treasureNearby)
+                {
+                    cout << "Treasure nearby! Keep looking." << endl;
+                }
+                else
+                {
+                    cout << "No signal of treasures nor traps nearby." << endl;
                 }
             }
             break;
