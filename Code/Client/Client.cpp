@@ -161,6 +161,11 @@ int main(int argc, char* argv[])
                 }
             }
             break;
+            case 6:
+            {
+                cout << "You replenished your energy. Current energy: " << player.getEnergy() << endl;
+            }
+            break;
 		}
     }
     std::cout << "Client finishing..." << std::endl;

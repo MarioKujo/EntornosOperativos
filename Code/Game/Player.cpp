@@ -79,7 +79,6 @@ void Player::useMap(Map& map)
 void Player::eat()
 {
     energy += 20;  // Increase energy
-    cout << "You replenished your energy. Current energy: " << energy << endl;
 }
 
 // Uses sonar to detect treasures or traps in a specified direction

@@ -33,11 +33,6 @@ void Game::processAction(int action)
 {
 	switch (action)
 	{
-	case 5:  // Place flag
-	{
-		player.placeFlag(map);
-	}
-	break;
 	case 6:  // Eat to replenish energy
 	{
 		player.eat();

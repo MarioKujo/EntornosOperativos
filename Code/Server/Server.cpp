@@ -235,7 +235,8 @@ int serverThreadFun(PDataPacket clientPacket) {
         break;
         case EAT:
         {
-            cout << "Player needs to eat" << endl;
+            player.eat();
+            clientPacket->energy = player.getEnergy();
         }
         break;
         case EXIT:
