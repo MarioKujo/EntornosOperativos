@@ -33,11 +33,6 @@ void Game::processAction(int action)
 {
 	switch (action)
 	{
-	case 4:  // Use map
-	{
-		player.useMap(map);
-	}
-	break;
 	case 5:  // Place flag
 	{
 		player.placeFlag(map);

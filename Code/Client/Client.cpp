@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
     string prefix = "Client:";
     obtainNewPort(s, &server_addr, prefix);
     std::cout << "Client already obtained new port: " << ntohs(server_addr.sin_port) << std::endl;
-    enum CellDug cd = NOTHING;
+    enum CellInfo cd = NOTHING;
     Game game(10, 10, 30);
     game.run();
     system("CLS");
@@ -97,13 +97,13 @@ int main(int argc, char* argv[])
 			    }
 			    if (!response->isDug)
 			    {
-				    cout << "Cell hasn't been dug" << endl;
+				    cout << "Cell hasn't been dug." << endl;
 			    }
 		    }
 		    break;
             case 3:
             {
-                cd = response->cellDug;
+                cd = response->cellInfo;
                 cell.isDug = response->isDug;
                 map.setCell(player.getPosition().x, player.getPosition().y, cell);
                 game.setMap(map);
@@ -124,6 +124,10 @@ int main(int argc, char* argv[])
                     cout << "It's a trap!" << endl;
                 }
                 break;
+                case FLAG:
+                {
+                    cout << "This cell has a flag." << endl;
+                }
                 }
             }
             break;
@@ -144,6 +148,16 @@ int main(int argc, char* argv[])
                 else
                 {
                     cout << "No signal of treasures nor traps nearby." << endl;
+                }
+            }
+            break;
+            case 5:
+            {
+                if (response->cellInfo == FLAG)
+                {
+                    cell.hasFlag = true;
+                    map.setCell(player.getPosition().x, player.getPosition().y, cell);
+                    game.setMap(map);
                 }
             }
             break;

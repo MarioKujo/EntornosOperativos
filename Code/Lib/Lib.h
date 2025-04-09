@@ -14,9 +14,9 @@ enum Operation
 {
     MOVE, INSPECT, DIG, USEMAP, PLACEFLAG, EAT, EXIT
 };
-enum CellDug
+enum CellInfo
 {
-    NOTHING, TRAP, TREASURE
+    NOTHING, TRAP, TREASURE, FLAG
 };
 typedef class DataPacket {
 public:
@@ -24,7 +24,7 @@ public:
     enum Operation operation;
     int dx, dy; // Only for Moving
     bool isDug; // Only for inspecting
-    enum CellDug cellDug; // Only for Digging
+    enum CellInfo cellInfo; // Only for Digging
     bool trapNearby;
     bool treasureNearby;
     int energy;
@@ -33,19 +33,19 @@ public:
     int treasuresFound;
     bool isRunning;
     Position position;
-    DataPacket() :client_id(0), operation(MOVE), cellDug(NOTHING),
+    DataPacket() :client_id(0), operation(MOVE), cellInfo(NOTHING),
         trapNearby(false), treasureNearby(false),
         energy(0), dx(0), dy(0), 
         currentTurn(0), maxTurns(0), treasuresFound(0),
         isRunning(false), position{0, 0}, isDug(false) {};
-    DataPacket(int _client_id, enum Operation _operation, enum CellDug _cellDug,
+    DataPacket(int _client_id, enum Operation _operation, enum CellInfo _cellDug,
         bool _trapNearby, bool _treasureNearby,
         int _energy, int _dx, int _dy, 
         int _currentTurn, int _maxTurns,int _treasuresFound, 
         bool _isRunning, Position _position, bool _isDug) {
         client_id = _client_id;
         operation = _operation;
-        cellDug = _cellDug;
+        cellInfo = _cellDug;
         trapNearby = _trapNearby;
         treasureNearby = _treasureNearby;
         energy = _energy;

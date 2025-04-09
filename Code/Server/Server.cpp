@@ -204,18 +204,18 @@ int serverThreadFun(PDataPacket clientPacket) {
             clientPacket->energy = player.getEnergy();
             if (map.getCell(player.getPosition().x, player.getPosition().y).hasTreasure)
             {
-                clientPacket->cellDug = TREASURE;
+                clientPacket->cellInfo = TREASURE;
                 clientPacket->treasuresFound++;
                 break;
             }
             else if (map.getCell(player.getPosition().x, player.getPosition().y).hasTrap)
             {
-                clientPacket->cellDug = TRAP;
+                clientPacket->cellInfo = TRAP;
                 break;
             }
             else
             {
-                clientPacket->cellDug = NOTHING;
+                clientPacket->cellInfo = NOTHING;
                 break;
             }
         }
@@ -229,7 +229,8 @@ int serverThreadFun(PDataPacket clientPacket) {
         break;
         case PLACEFLAG:
         {
-            cout << "Player needs to place flag" << endl;
+            player.placeFlag(map);
+            clientPacket->cellInfo = FLAG;
         }
         break;
         case EAT:
