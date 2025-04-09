@@ -250,11 +250,15 @@ int serverThreadFun(PDataPacket clientPacket) {
 	    }
 	    break;
     }
-    if (clientPacket->currentTurn != clientPacket->maxTurns)
+    if(clientPacket->currentTurn != clientPacket->maxTurns)
     {
         clientPacket->currentTurn++;
     }
-    else if (clientPacket->currentTurn == clientPacket->maxTurns || clientPacket->energy <= 0)
+    else
+    {
+        clientPacket->isRunning = false;
+    }
+    if (clientPacket->energy <= 0)
     {
         clientPacket->isRunning = false;
     }
