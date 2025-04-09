@@ -185,9 +185,8 @@ int serverThreadFun(PDataPacket clientPacket) {
         {
             if (game.getMap().getCell(clientPacket->position.x, clientPacket->position.y).isDug)
             {
-
+                clientPacket->isDug = true;
             }
-            cout << "Player needs to inspect" << endl;
         }
         break;
         case DIG:
