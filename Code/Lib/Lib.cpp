@@ -7,15 +7,6 @@
 #include "Lib.h"
 #include <format>
 
-std::ostream& operator << (std::ostream& os, const DataPacket& dp) {
-    return (os << "DataPacket{client: " << dp.client_id
-        << " seq: " << dp.sequence
-        << " op1: " << dp.op1
-        << " operation: " << dp.operation
-        << " op2: " << dp.op2
-        << " res: " << dp.res << "}");
-}
-
 //will print msg with WSAGetLastError, then closesocket
 void treatError(const std::string msg, SOCKET s) {
     std::cout << msg << WSAGetLastError() << std::endl;
@@ -38,8 +29,6 @@ int sendtoMsg(SOCKET s, sockaddr_in* dest_addr, PDataPacket packet, std::string 
     //we make the casting to char* because it expects data as just chars, last param 0 is for flags that we don't need
     int result = sendto(s, (char*)packet, sizeof(DataPacket), 0, (SOCKADDR*)dest_addr, sizeof(SOCKADDR));
     assert(result != SOCKET_ERROR);
-
-    std::cout << prefix << " succesfully sent msg: " << *packet << std::endl;
     return result;
 }
 
@@ -51,8 +40,6 @@ int recvfromMsg(SOCKET s, sockaddr_in* sender_addr, PDataPacket response, std::s
     //recvfrom addr is ALWAYS an out param 
     int result = recvfrom(s, (char*)response, sizeof(DataPacket), 0, (SOCKADDR*)sender_addr, &fromlen);
     assert(result != SOCKET_ERROR);
-
-    std::cout << prefix << " succesfully received: " << *response << std::endl;
     return result;
 }
 
@@ -79,9 +66,6 @@ int sendMsg(SOCKET acceptSocket, PDataPacket packet, std::string prefix) {
     if (sbyteCount < 0) {
         treatError(std::format("{} send error: ", prefix), acceptSocket);
     }
-    else {
-        std::cout << prefix << " succesfully sent msg: " << *packet << std::endl;
-    }
     return sbyteCount;
 }
 
@@ -93,7 +77,6 @@ int recvMsg(SOCKET acceptSocket, PDataPacket recv_msg, std::string prefix) {
     }
     else {
         DataPacket clientPacket = (DataPacket)*recv_msg;
-        std::cout << prefix << " succesfully received: " << clientPacket << std::endl;
     }
     return rbyteCount;
 }

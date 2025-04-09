@@ -131,6 +131,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Game\Game.vcxproj">
+      <Project>{c246c593-fa7d-484a-bbbb-a9021b6528b8}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Lib\Lib.vcxproj">
       <Project>{47d9e903-ff4c-46be-aff1-c588848d9c4f}</Project>
     </ProjectReference>

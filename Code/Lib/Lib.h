@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include <time.h>
 #include <Windows.h>
 #include <iostream>
@@ -8,31 +7,31 @@
 #include <WS2tcpip.h>
 #include <string>
 #include <assert.h>
+#include "../Game/Game.hpp"
 
 #define MSG_SIZE 256
 enum Operation
 {
-    SUM, DIFF, PROD, DIV, POWER
+    MOVE, INSPECT, DIG, USEMAP, PLACEFLAG, EAT, EXIT
 };
 
 typedef class DataPacket {
 public:
     int client_id;
-    int sequence;
-    int op1;
     enum Operation operation;
-    //int operation;
-    int op2;
-    long long res;
-    DataPacket() {};
-    DataPacket(int _client_id, int _sequence, int _op1, enum Operation _operation, int _op2) {
-        //DataPacket(int _client_id, int _sequence, int _op1, int _operation, int _op2) {
+    int dx, dy;
+    int currentTurn;
+    bool isRunning;
+    Position position;
+    DataPacket() :client_id(0), operation(MOVE), dx(0), dy(0), currentTurn(0), isRunning(false), position {0, 0} {};
+    DataPacket(int _client_id, enum Operation _operation, int _dx, int _dy, int _currentTurn, bool _isRunning, Position _position) {
         client_id = _client_id;
-        sequence = _sequence;
-        op1 = _op1;
         operation = _operation;
-        op2 = _op2;
-        res = INFINITE;
+        position = _position;
+        dx = _dx;
+        dy = _dy;
+        currentTurn = _currentTurn;
+        isRunning = _isRunning;
     }
 } *PDataPacket;
 
@@ -51,10 +50,6 @@ public:
         closesocket(s);
     }
 } *PThreadInfo;
-
-std::ostream& operator << (std::ostream& os, const DataPacket& dp);
-// The reason this is in a separate file is because I want to use this
-// on the server and the client
 
 void treatError(const std::string msg, SOCKET s);
 

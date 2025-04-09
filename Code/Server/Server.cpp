@@ -5,6 +5,7 @@
 #include <WS2tcpip.h>
 #include <assert.h>
 #include "../Lib/Lib.h"
+#include "../Game/Game.hpp"
 #include <iostream>
 #include <math.h>
 #include <format>
@@ -142,6 +143,7 @@ DWORD WINAPI threadFun(LPVOID param) {
     PThreadInfo thInfo = (ThreadInfo*)param;
     bool serve = true;
     PDataPacket packet = new DataPacket();
+    Game game;
     while (serve) {
         std::cout << "Server Thread ready to recv" << std::endl;
         //recv msg, then cast it to DataPacket and call serverFun
@@ -169,22 +171,46 @@ DWORD WINAPI threadFun(LPVOID param) {
 
 //makes operation with op1 and op2 storing the result in res, all of them fields of clientPacket
 int serverThreadFun(PDataPacket clientPacket) {
-    cout << "ClientPacket: " << *clientPacket << endl;
-    switch (clientPacket->operation) {
-    case SUM: clientPacket->res = clientPacket->op1 + clientPacket->op2;
-        break;
-    case DIFF: clientPacket->res = clientPacket->op1 - clientPacket->op2;
-        break;
-    case PROD: clientPacket->res = clientPacket->op1 * clientPacket->op2;
-        break;
-    case DIV: clientPacket->res = clientPacket->op1 / clientPacket->op2;
-        break;
-    case POWER: clientPacket->res = (long long)pow(clientPacket->op1, clientPacket->op2);
-        break;
-    default:
-        return -1;
+    switch (clientPacket->operation)
+    {
+    case MOVE:
+    {
+        clientPacket->position.x += clientPacket->dx;
+        clientPacket->position.y += clientPacket->dy;
     }
-    cout << "Operation performed: " << *clientPacket << endl;
+    break;
+    case INSPECT:
+    {
+        cout << "Player needs to inspect" << endl;
+    }
+    break;
+    case DIG:
+    {
+        cout << "Player needs to dig" << endl;
+    }
+    break;
+    case USEMAP:
+    {
+        cout << "Player needs to use map" << endl;
+    }
+    break;
+    case PLACEFLAG:
+    {
+        cout << "Player needs to place flag" << endl;
+    }
+    break;
+    case EAT:
+    {
+        cout << "Player needs to eat" << endl;
+    }
+    break;
+    case EXIT:
+    {
+        cout << "Player needs to exit" << endl;
+    }
+    break;
+
+    }
     return 0;
 }
 
