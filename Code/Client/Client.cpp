@@ -48,11 +48,13 @@ int main(int argc, char* argv[])
     string prefix = "Client:";
     obtainNewPort(s, &server_addr, prefix);
     std::cout << "Client already obtained new port: " << ntohs(server_addr.sin_port) << std::endl;
-    enum Operation ops = MOVE;
+    enum CellDug cd = NOTHING;
     Game game(10, 10, 30);
     game.run();
     system("CLS");
     bool isRunning = true;
+    int treasuresFound = 0;
+    Player player = game.getPlayer();
     while (isRunning)
     {
         game.run();
@@ -66,26 +68,59 @@ int main(int argc, char* argv[])
             cout << "y displacement: ";
             cin >> y;
         }
-        PDataPacket packet = new DataPacket(client, static_cast<Operation>(action - 1), x, y,
-            game.getCurrentTurn(), game.getTurnLimit(), game.getIsRunning(),
+        PDataPacket packet = new DataPacket(client, static_cast<Operation>(action - 1), cd, player.getEnergy(), x, y,
+            game.getCurrentTurn(), game.getTurnLimit(), treasuresFound, game.getIsRunning(),
             game.getPlayer().getPosition(), false);
         PDataPacket response = new DataPacket();
         sendtorecvfromMsg(s, &server_addr, packet, response, prefix);
-        Player player;
         player.setPosition(response->position);
+        player.setEnergy(response->energy);
         game.setPlayer(player);
         game.setCurrentTurn(response->currentTurn);
-        if (action == 2)
-        {
-            if (response->isDug)
+        
+        Map map = game.getMap();
+        Cell cell = map.getCell(player.getPosition().x, player.getPosition().y);
+		switch (action)
+		{
+		    case 2:
+		    {
+			    if (response->isDug)
+			    {
+				    cout << "There's nothing here." << endl;
+			    }
+			    if (!response->isDug)
+			    {
+				    cout << "Cell hasn't been dug" << endl;
+			    }
+		    }
+		    break;
+            case 3:
             {
-                cout << "There's nothing here." << endl;
+                cd = response->cellDug;
+                cell.isDug = response->isDug;
+                map.setCell(player.getPosition().x, player.getPosition().y, cell);
+                game.setMap(map);
+                switch (cd)
+                {
+                case NOTHING:
+                {
+                    cout << "There's nothing here." << endl;
+                }
+                break;
+                case TREASURE:
+                {
+                    cout << "Treasure found!" << endl;
+                }
+                break;
+                case TRAP:
+                {
+                    cout << "It's a trap!" << endl;
+                }
+                break;
+                }
             }
-            if (!response->isDug)
-            {
-                cout << "Cell hasn't been dug" << endl;
-            }
-        }
+            break;
+		}
     }
     std::cout << "Client finishing..." << std::endl;
     int iResult = closesocket(s);

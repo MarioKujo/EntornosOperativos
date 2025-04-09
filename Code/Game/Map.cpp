@@ -58,12 +58,17 @@ void Map::displayMap(const Position& playerPos) const
 
 Cell& Map::getCell(int x, int y)
 {
-    return grid[y][x];
+    return grid[x][y];
 }
 
 bool Map::isValidPosition(int x, int y) const
 {
     return x >= 0 && x < width && y >= 0 && y < height;
+}
+
+void Map::setCell(int x, int y, Cell newCell)
+{
+    grid[x][y] = newCell;
 }
 
 int Map::getHeight()

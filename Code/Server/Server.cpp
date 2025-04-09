@@ -171,27 +171,54 @@ DWORD WINAPI threadFun(LPVOID param) {
 //makes operation with op1 and op2 storing the result in res, all of them fields of clientPacket
 int serverThreadFun(PDataPacket clientPacket) {
     cout << "Server received packet" << endl;
-    Player player;
+    Player player = game.getPlayer();
+    Map map = game.getMap();
     int x = 0, y = 0;
+    player.setEnergy(clientPacket->energy);
     switch (clientPacket->operation)
     {
         case MOVE:
         {
-            clientPacket->position.x += clientPacket->dx;
-            clientPacket->position.y += clientPacket->dy;
+            player.setPosition(clientPacket->position);
+            player.move(clientPacket->dx, clientPacket->dy, map);
+            clientPacket->energy = player.getEnergy();
+            clientPacket->position = player.getPosition();
         }
         break;
         case INSPECT:
         {
-            if (game.getMap().getCell(clientPacket->position.x, clientPacket->position.y).isDug)
+            if (map.getCell(clientPacket->position.x, clientPacket->position.y).isDug)
             {
                 clientPacket->isDug = true;
+            }
+            else
+            {
+                clientPacket->isDug = false;
             }
         }
         break;
         case DIG:
         {
-            cout << "Player needs to dig" << endl;
+            player.setPosition(clientPacket->position);
+            player.dig(map);
+            clientPacket->isDug = true;
+            clientPacket->energy = player.getEnergy();
+            if (map.getCell(player.getPosition().x, player.getPosition().y).hasTreasure)
+            {
+                clientPacket->cellDug = TREASURE;
+                clientPacket->treasuresFound++;
+                break;
+            }
+            else if (map.getCell(player.getPosition().x, player.getPosition().y).hasTrap)
+            {
+                clientPacket->cellDug = TRAP;
+                break;
+            }
+            else
+            {
+                clientPacket->cellDug = NOTHING;
+                break;
+            }
         }
         break;
         case USEMAP:

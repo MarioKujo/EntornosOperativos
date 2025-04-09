@@ -23,4 +23,5 @@ public:
     int getTreasuresFound() const;
 
     void setPosition(Position newPosition);
+    void setEnergy(int newEnergy);
 };

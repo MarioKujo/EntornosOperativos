@@ -29,13 +29,11 @@ void Player::dig(Map& map)
     {
         treasuresFound++;
     }
-    cout << cell.inspect() << endl;
 }
 
 void Player::inspect(Map& map) const
 {
     const Cell& cell = map.getCell(pos.x, pos.y);
-    cout << cell.inspect() << endl;
 }
 
 void Player::placeFlag(Map& map)
@@ -180,6 +178,11 @@ int Player::getTreasuresFound() const { return treasuresFound; }
 void Player::setPosition(Position newPosition)
 {
     pos = newPosition;
+}
+
+void Player::setEnergy(int newEnergy)
+{
+    energy = newEnergy;
 }
 
 

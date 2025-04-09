@@ -105,3 +105,8 @@ void Game::setPlayer(Player newVal)
 {
 	player = newVal;
 }
+
+void Game::setMap(Map newMap)
+{
+	map = newMap;
+}

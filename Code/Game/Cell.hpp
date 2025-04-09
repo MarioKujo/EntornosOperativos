@@ -9,6 +9,4 @@ public:
     bool hasTrap = false;
     bool isDug = false;
     bool hasFlag = false;
-
-    string inspect() const;
 };

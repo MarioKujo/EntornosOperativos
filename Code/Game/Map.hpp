@@ -16,6 +16,8 @@ public:
     Cell& getCell(int x, int y);
     bool isValidPosition(int x, int y) const;
 
+    void setCell(int x, int y, Cell newCell);
+
     int getHeight();
     int getWidth();
 };
