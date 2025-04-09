@@ -16,4 +16,5 @@ public:
     void run();
     void showMenu();
     void processAction(int action);
+    void clearScreen();
 };

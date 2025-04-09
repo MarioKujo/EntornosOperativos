@@ -17,6 +17,7 @@ public:
     void placeFlag(Map& map);
     void useMap(Map& map) const;
     void eat();
+    void fireSonar(Map& map)const;
     int getEnergy() const;
     int getTreasuresFound() const;
 };

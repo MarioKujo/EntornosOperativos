@@ -3,6 +3,7 @@
 Game::Game(int width, int height, int numTreasures, int limit)
 	: map(width, height, numTreasures), turnLimit(limit), currentTurn(0), isRunning(true) {}
 
+
 void Game::run()
 {
 	while (isRunning && currentTurn < turnLimit && (player.getEnergy() > 0))
@@ -15,6 +16,7 @@ void Game::run()
 		int action;
 		cin >> action;
 		processAction(action);
+		clearScreen();
 		currentTurn++;
 	}
 	cout << "Game finished. Treasures found: " << player.getTreasuresFound() << endl;
@@ -23,7 +25,7 @@ void Game::run()
 void Game::showMenu()
 {
 	cout << "\nActions:" << endl;
-	cout << "1. Move\n2. Inspect cell\n3. Dig\n4. Use map\n5. Flag\n6. Eat\n7. Exit\nChoose an option: ";
+	cout << "1. Move\n2. Inspect cell\n3. Dig\n4. Use map\n5. Flag\n6. Eat\n7. Use sonar\n8. Exit\nChoose an option: ";
 }
 
 void Game::processAction(int action)
@@ -65,6 +67,11 @@ void Game::processAction(int action)
 		}
 		case 7:
 		{
+			player.fireSonar(map);
+			break;
+		}
+		case 8:
+		{
 			isRunning = false;
 			break;
 		}
@@ -74,4 +81,10 @@ void Game::processAction(int action)
 			break;
 		}
 	}
+}
+
+void Game::clearScreen()
+{
+	system("pause");
+	system("CLS");
 }

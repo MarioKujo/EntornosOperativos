@@ -14,4 +14,7 @@ public:
     void displayMap(const Position& playerPos) const;
     Cell& getCell(int x, int y);
     bool isValidPosition(int x, int y) const;
+
+    int getHeight();
+    int getWidth();
 };

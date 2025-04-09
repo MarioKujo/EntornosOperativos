@@ -56,3 +56,13 @@ bool Map::isValidPosition(int x, int y) const
 {
     return x >= 0 && x < width && y >= 0 && y < height;
 }
+
+int Map::getHeight()
+{
+    return height;
+}
+
+int Map::getWidth()
+{
+    return width;
+}

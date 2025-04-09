@@ -101,8 +101,98 @@ void Player::useMap(Map& map) const
 
 void Player::eat()
 {
-    energy += 20;
+    if (energy == 100)
+    {
+        cout << "Your energy is full" << endl;
+        return;
+    }
+    if ((energy + 20) > 100)
+    {
+        energy = 100;
+    }
+    else
+    {
+        energy += 20;
+    }
     cout << "You replenished your energy. Current energy: " << energy << endl;
+}
+
+void Player::fireSonar(Map& map) const
+{
+    std::cout << "Choose a direction to fire the sonar (N/S/E/W): ";
+    char dir;
+    std::cin >> dir;
+    dir = std::toupper(dir);
+
+    int x = pos.x;
+    int y = pos.y;
+    bool found = false;
+
+	switch (dir)
+	{
+	    case 'N':
+	    {
+		    for (int i = y - 1; i >= 0; --i)
+		    {
+			    if (map.getCell(x, i).hasTreasure || map.getCell(x, i).hasTrap)
+			    {
+				    found = true;
+				    break;
+			    }
+		    }
+	    }
+	    break;
+	    case 'S':
+	    {
+		    for (int i = y + 1; i < map.getHeight(); ++i)
+		    {
+			    if (map.getCell(x, i).hasTreasure || map.getCell(x, i).hasTrap)
+			    {
+				    found = true;
+				    break;
+			    }
+		    }
+	    }
+	    break;
+	    case 'E':
+	    {
+		    for (int i = x + 1; i < map.getWidth(); ++i)
+		    {
+			    if (map.getCell(i, y).hasTreasure || map.getCell(i, y).hasTrap)
+			    {
+				    found = true;
+				    break;
+			    }
+		    }
+	    }
+	    break;
+	    case 'W':
+	    {
+		    for (int i = x - 1; i >= 0; --i)
+		    {
+			    if (map.getCell(i, y).hasTreasure || map.getCell(i, y).hasTrap)
+			    {
+				    found = true;
+				    break;
+			    }
+		    }
+	    }
+	    break;
+	    default:
+	    {
+		    cout << "Invalid direction." << endl;
+	    }
+	    return;
+	}
+
+    if (found)
+    {
+        cout << "The sonar detects something in that direction." << endl;
+    }
+    else
+    {
+        cout << "Nothing detected in that direction." << endl;
+    }
 }
 
 int Player::getEnergy() const { return energy; }
