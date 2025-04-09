@@ -26,7 +26,6 @@
     <ClInclude Include="..\Code\Game\Position.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Code\Game\Cell.cpp" />
     <ClCompile Include="..\Code\Game\Game.cpp" />
     <ClCompile Include="..\Code\Game\Map.cpp" />
     <ClCompile Include="..\Code\Game\Player.cpp" />

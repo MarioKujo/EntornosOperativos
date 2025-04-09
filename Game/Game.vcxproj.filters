@@ -32,9 +32,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Code\Game\Cell.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\Game\Game.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>

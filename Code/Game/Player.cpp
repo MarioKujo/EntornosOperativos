@@ -1,58 +1,62 @@
 #include "Player.hpp"
 #include <iostream>
 
-Player::Player() : pos{ 0, 0 }, energy(100), treasuresFound(0) {}
+Player::Player() : pos{ 0, 0 }, energy(100), treasuresFound(0) {}  // Constructor initializing position, energy, and treasures found
 
-Position Player::getPosition() const { return pos; }
+Position Player::getPosition() const { return pos; }  // Returns the current position of the player
 
+// Moves the player by a specified delta (dx, dy) if the new position is valid
 void Player::move(int dx, int dy, const Map& map)
 {
     Position newPos = { pos.x + dx, pos.y + dy };
-    if (map.isValidPosition(newPos.x, newPos.y))
+    if (map.isValidPosition(newPos.x, newPos.y))  // Check if the new position is valid on the map
     {
         pos = newPos;
-        energy -= 5;
+        energy -= 5;  // Decrease energy on movement
         cout << "You have moved to (" << pos.x << ", " << pos.y << ")" << endl;
     }
     else
     {
-        cout << "Invalid movement." << endl;
+        cout << "Invalid movement." << endl;  // Notify if the move is invalid
     }
 }
 
+// Digs the cell at the player's current position, revealing treasure or not
 void Player::dig(Map& map)
 {
-    Cell& cell = map.getCell(pos.x, pos.y);
-    cell.isDug = true;
-    energy -= 10;
-    if (cell.hasTreasure)
+    Cell& cell = map.getCell(pos.x, pos.y);  // Access the cell at the player's position
+    cell.isDug = true;  // Mark the cell as dug
+    energy -= 10;  // Decrease energy for digging
+    if (cell.hasTreasure)  // If the cell contains treasure, increment the treasure count
     {
         treasuresFound++;
     }
 }
 
+// Inspect the cell at the player's current position (doesn't currently do anything)
 void Player::inspect(Map& map) const
 {
-    const Cell& cell = map.getCell(pos.x, pos.y);
+    const Cell& cell = map.getCell(pos.x, pos.y);  // Access the cell, but no action is taken
 }
 
+// Places a flag on the cell at the player's current position
 void Player::placeFlag(Map& map)
 {
-    Cell& cell = map.getCell(pos.x, pos.y);
-    cell.hasFlag = true;
+    Cell& cell = map.getCell(pos.x, pos.y);  // Access the cell at the player's position
+    cell.hasFlag = true;  // Mark the cell as flagged
     cout << "You flagged this cell." << endl;
 }
 
+// Uses the map to check the area around the player for treasures or traps
 void Player::useMap(Map& map) const
 {
-    // Muestra la zona cercana (puedes cambiar el rango si lo prefieres)
-    int range = 2;  // Rango de 2 celdas a la redonda
+    int range = 2;  // Range of cells to check around the player
     bool treasureNearby = false;
     bool trapNearby = false;
 
     cout << "Searching..." << endl;
 
-    // Recorre las celdas alrededor del jugador en el rango especificado
+    // Checks cells around the player within the range
     for (int dx = -range; dx <= range; ++dx)
     {
         for (int dy = -range; dy <= range; ++dy)
@@ -60,11 +64,12 @@ void Player::useMap(Map& map) const
             int newX = pos.x + dx;
             int newY = pos.y + dy;
 
-            // Verifica si la celda está dentro del mapa
+            // Check if the cell is within the map bounds
             if (map.isValidPosition(newX, newY))
             {
                 const Cell& cell = map.getCell(newX, newY);
 
+                // Check for treasures or traps
                 if (cell.hasTreasure)
                 {
                     treasureNearby = true;
@@ -77,7 +82,7 @@ void Player::useMap(Map& map) const
         }
     }
 
-    // Da pistas basadas en la proximidad de tesoros o trampas
+    // Output hints based on nearby treasures or traps
     if (treasureNearby && trapNearby)
     {
         cout << "Danger! Traps and treasures nearby." << endl;
@@ -96,24 +101,26 @@ void Player::useMap(Map& map) const
     }
 }
 
-
+// Restores energy to the player by 20 units
 void Player::eat()
 {
-    energy += 20;
+    energy += 20;  // Increase energy
     cout << "You replenished your energy. Current energy: " << energy << endl;
 }
 
+// Uses sonar to detect treasures or traps in a specified direction
 void Player::useSonar(Map& map) const
 {
     std::cout << "Choose a direction to fire the sonar (N/S/E/W): ";
     char dir;
     std::cin >> dir;
-    dir = std::toupper(dir);
+    dir = std::toupper(dir);  // Convert direction input to uppercase
 
     int x = pos.x;
     int y = pos.y;
     bool found = false;
 
+    // Check in the specified direction (N, S, E, W) for treasures or traps
     switch (dir)
     {
     case 'N':
@@ -161,6 +168,7 @@ void Player::useSonar(Map& map) const
         return;
     }
 
+    // Output sonar results
     if (found)
     {
         cout << "The sonar detects something in that direction." << endl;
@@ -169,20 +177,19 @@ void Player::useSonar(Map& map) const
     {
         cout << "Nothing detected in that direction." << endl;
     }
-
 }
 
+// Getter methods for player energy and treasures found
 int Player::getEnergy() const { return energy; }
 int Player::getTreasuresFound() const { return treasuresFound; }
 
+// Setter methods for position and energy
 void Player::setPosition(Position newPosition)
 {
-    pos = newPosition;
+    pos = newPosition;  // Update the player's position
 }
 
 void Player::setEnergy(int newEnergy)
 {
-    energy = newEnergy;
+    energy = newEnergy;  // Set the player's energy to a new value
 }
-
-
