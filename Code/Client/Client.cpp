@@ -76,7 +76,10 @@ int main(int argc, char* argv[])
             game.getIsRunning(), game.getPlayer().getPosition(), false);
         PDataPacket response = new DataPacket();
         sendtorecvfromMsg(s, &server_addr, packet, response, prefix);
-        player.setPosition(response->position);
+        if (action == 1)
+        {
+            player.setPosition(response->position);
+        }
         player.setEnergy(response->energy);
         game.setPlayer(player);
         game.setCurrentTurn(response->currentTurn);

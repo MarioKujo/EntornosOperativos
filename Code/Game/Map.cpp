@@ -69,7 +69,7 @@ void Map::displayMap(const Position& playerPos) const
 // Returns a reference to the cell at the given coordinates
 Cell& Map::getCell(int x, int y)
 {
-    return grid[x][y];
+    return grid[y][x];
 }
 
 // Checks if the given position (x, y) is within valid map bounds
@@ -81,7 +81,7 @@ bool Map::isValidPosition(int x, int y) const
 // Sets the given cell at coordinates (x, y) to a new cell
 void Map::setCell(int x, int y, Cell newCell)
 {
-    grid[x][y] = newCell;  // Update the cell at the specified position
+    grid[y][x] = newCell;  // Update the cell at the specified position
 }
 
 // Returns the height (rows) of the map
