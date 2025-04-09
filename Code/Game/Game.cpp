@@ -21,7 +21,7 @@ void Game::run()
 void Game::showMenu()
 {
 	cout << "\nActions:" << endl;
-	cout << "1. Move\n2. Inspect cell\n3. Dig\n4. Use map\n5. Flag\n6. Eat\n7. Exit\nChoose an option: ";
+	cout << "1. Move\n2. Inspect cell\n3. Dig\n4. Use map\n5. Flag\n6. Eat\n7. Use sonar\n8. Exit\nChoose an option: ";
 }
 
 void Game::processAction(int action)
@@ -34,43 +34,48 @@ void Game::processAction(int action)
 			cout << "Movement (insert 2 separate numbers: x movement and y movement): ";
 			cin >> dx >> dy;
 			player.move(dx, dy, map);
-			break;
 		}
+		break;
 		case 2:
 		{
 			player.inspect(map);
-			break;
 		}
+		break;
 		case 3:
 		{
 			player.dig(map);
-			break;
 		}
+		break;
 		case 4:
 		{
 			player.useMap(map);
-			break;
 		}
+		break;
 		case 5:
 		{
 			player.placeFlag(map);
-			break;
 		}
+		break;
 		case 6:
 		{
 			player.eat();
-			break;
 		}
+		break;
 		case 7:
 		{
-			isRunning = false;
-			break;
+			player.useSonar(map);
 		}
+		break;
+		case 8:
+		{
+			isRunning = false;
+		}
+		break;
 		default:
 		{
 			cout << "Invalid option." << endl;
-			break;
 		}
+		break;
 	}
 }
 

@@ -16,6 +16,7 @@ public:
     void placeFlag(Map& map);
     void useMap(Map& map) const;
     void eat();
+    void useSonar(Map& map)const;
 
     Position getPosition() const;
     int getEnergy() const;
