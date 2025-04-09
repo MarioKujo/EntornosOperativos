@@ -11,7 +11,8 @@ private:
     int turnLimit;            // Maximum number of turns in the game
     int currentTurn;          // Current turn number
     bool isRunning;           // Whether the game is still running or not
-
+    int treasuresFound;       // Amount of treasures that have been currently found
+    int maxTreasures;         // Amount of treasures in total
 public:
     Game(int width, int height, int turns);                      // Constructor with map size and turn limit
     Game(int width, int height, int numTreasures, int turnLimit); // Constructor with map size, treasures, and turn limit
@@ -19,7 +20,6 @@ public:
 
     void run();                     // Main game loop that runs each turn
     void showMenu();                // Displays the menu of available actions
-    void processAction(int action); // Processes the chosen action
     int getTurnLimit();             // Returns the turn limit
     int getCurrentTurn();           // Returns the current turn number
     bool getIsRunning();            // Returns whether the game is running or not
@@ -29,4 +29,5 @@ public:
     void setCurrentTurn(int newTurn);   // Sets a new value for the current turn
     void setPlayer(Player newVal);      // Sets the player object to a new value
     void setMap(Map newMap);            // Sets the map object to a new value
+    void setTreasuresFound(int newVal);
 };

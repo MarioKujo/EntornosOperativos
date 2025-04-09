@@ -12,7 +12,7 @@
 #define MSG_SIZE 256
 enum Operation
 {
-    MOVE, INSPECT, DIG, USEMAP, PLACEFLAG, EAT, EXIT
+    MOVE, INSPECT, DIG, USEMAP, PLACEFLAG, EAT, SONAR, EXIT
 };
 enum CellInfo
 {
@@ -25,8 +25,10 @@ public:
     int dx, dy; // Only for Moving
     bool isDug; // Only for inspecting
     enum CellInfo cellInfo; // Only for Digging
-    bool trapNearby;
-    bool treasureNearby;
+    bool trapNearby; // Only for map
+    bool treasureNearby; // Only for map
+    bool sonar; // Only for sonar
+    char dir; // Only for sonar
     int energy;
     int currentTurn;
     int maxTurns;
@@ -34,13 +36,13 @@ public:
     bool isRunning;
     Position position;
     DataPacket() :client_id(0), operation(MOVE), cellInfo(NOTHING),
-        trapNearby(false), treasureNearby(false),
-        energy(0), dx(0), dy(0), 
+        trapNearby(false), treasureNearby(false), sonar(false),
+        dir(' '), energy(0), dx(0), dy(0),
         currentTurn(0), maxTurns(0), treasuresFound(0),
         isRunning(false), position{0, 0}, isDug(false) {};
     DataPacket(int _client_id, enum Operation _operation, enum CellInfo _cellDug,
-        bool _trapNearby, bool _treasureNearby,
-        int _energy, int _dx, int _dy, 
+        bool _trapNearby, bool _treasureNearby, bool _sonar,
+        char _dir, int _energy, int _dx, int _dy, 
         int _currentTurn, int _maxTurns,int _treasuresFound, 
         bool _isRunning, Position _position, bool _isDug) {
         client_id = _client_id;
@@ -48,6 +50,8 @@ public:
         cellInfo = _cellDug;
         trapNearby = _trapNearby;
         treasureNearby = _treasureNearby;
+        sonar = _sonar;
+        dir = _dir;
         energy = _energy;
         position = _position;
         dx = _dx;

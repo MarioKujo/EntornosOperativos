@@ -19,7 +19,7 @@ public:
     void placeFlag(Map& map);  // Places a flag on the current cell
     void useMap(Map& map); // Uses the map to check nearby cells for treasures or traps
     void eat();                // Restores the player's energy
-    void useSonar(Map& map) const;  // Uses sonar to check for treasures or traps in a specific direction
+    bool useSonar(Map& map, char dir, int x, int y) const;  // Uses sonar to check for treasures or traps in a specific direction
 
     Position getPosition() const;  // Returns the player's current position
     int getEnergy() const;         // Returns the player's current energy level

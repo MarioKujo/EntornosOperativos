@@ -178,72 +178,77 @@ int serverThreadFun(PDataPacket clientPacket) {
     player.setPosition(clientPacket->position);
     switch (clientPacket->operation)
     {
-        case MOVE:
-        {
-            player.move(clientPacket->dx, clientPacket->dy, map);
-            clientPacket->energy = player.getEnergy();
-            clientPacket->position = player.getPosition();
-        }
-        break;
-        case INSPECT:
-        {
-            if (map.getCell(clientPacket->position.x, clientPacket->position.y).isDug)
-            {
-                clientPacket->isDug = true;
-            }
-            else
-            {
-                clientPacket->isDug = false;
-            }
-        }
-        break;
-        case DIG:
-        {
-            player.dig(map);
-            clientPacket->isDug = true;
-            clientPacket->energy = player.getEnergy();
-            if (map.getCell(player.getPosition().x, player.getPosition().y).hasTreasure)
-            {
-                clientPacket->cellInfo = TREASURE;
-                clientPacket->treasuresFound++;
-                break;
-            }
-            else if (map.getCell(player.getPosition().x, player.getPosition().y).hasTrap)
-            {
-                clientPacket->cellInfo = TRAP;
-                break;
-            }
-            else
-            {
-                clientPacket->cellInfo = NOTHING;
-                break;
-            }
-        }
-        break;
-        case USEMAP:
-        {
-            player.useMap(map);
-            clientPacket->treasureNearby = player.getTreasureNearby();
-            clientPacket->trapNearby = player.getTrapNearby();
-        }
-        break;
-        case PLACEFLAG:
-        {
-            player.placeFlag(map);
-            clientPacket->cellInfo = FLAG;
-        }
-        break;
-        case EAT:
-        {
-            player.eat();
-            clientPacket->energy = player.getEnergy();
-        }
-        break;
-        case EXIT:
-        {
-            cout << "Player needs to exit" << endl;
-        }
-        break;
+	    case MOVE:
+	    {
+		    player.move(clientPacket->dx, clientPacket->dy, map);
+		    clientPacket->energy = player.getEnergy();
+		    clientPacket->position = player.getPosition();
+	    }
+	    break;
+	    case INSPECT:
+	    {
+		    if (map.getCell(clientPacket->position.x, clientPacket->position.y).isDug)
+		    {
+			    clientPacket->isDug = true;
+		    }
+		    else
+		    {
+			    clientPacket->isDug = false;
+		    }
+	    }
+	    break;
+	    case DIG:
+	    {
+		    player.dig(map);
+		    clientPacket->isDug = true;
+		    clientPacket->energy = player.getEnergy();
+		    if (map.getCell(player.getPosition().x, player.getPosition().y).hasTreasure)
+		    {
+			    clientPacket->cellInfo = TREASURE;
+			    clientPacket->treasuresFound++;
+			    break;
+		    }
+		    else if (map.getCell(player.getPosition().x, player.getPosition().y).hasTrap)
+		    {
+			    clientPacket->cellInfo = TRAP;
+			    break;
+		    }
+		    else
+		    {
+			    clientPacket->cellInfo = NOTHING;
+			    break;
+		    }
+	    }
+	    break;
+	    case USEMAP:
+	    {
+		    player.useMap(map);
+		    clientPacket->treasureNearby = player.getTreasureNearby();
+		    clientPacket->trapNearby = player.getTrapNearby();
+	    }
+	    break;
+	    case PLACEFLAG:
+	    {
+		    player.placeFlag(map);
+		    clientPacket->cellInfo = FLAG;
+	    }
+	    break;
+	    case EAT:
+	    {
+		    player.eat();
+		    clientPacket->energy = player.getEnergy();
+	    }
+	    break;
+	    case SONAR:
+	    {
+		    clientPacket->sonar = player.useSonar(map, clientPacket->dir, player.getPosition().x, player.getPosition().y);
+	    }
+	    break;
+	    case EXIT:
+	    {
+		    clientPacket->isRunning = false;
+	    }
+	    break;
     }
     if(clientPacket->currentTurn != clientPacket->maxTurns)
     {

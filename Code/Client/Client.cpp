@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
     bool isRunning = true;
     int treasuresFound = 0;
     Player player = game.getPlayer();
-    bool treasureNearby = false, trapNearby = false;
+    bool treasureNearby = false, trapNearby = false, sonar = false;
     while (isRunning)
     {
         game.run();
@@ -69,9 +69,16 @@ int main(int argc, char* argv[])
             cout << "y displacement: ";
             cin >> y;
         }
+        char dir = ' ';
+        if (action == 7)
+        {
+            cout << "Choose a direction to fire the sonar (N/S/E/W): ";
+            cin >> dir;
+            dir = toupper(dir);
+        }
         PDataPacket packet = new DataPacket(client, static_cast<Operation>(action - 1), cd,
-            treasureNearby, trapNearby,
-            player.getEnergy(), x, y,
+            treasureNearby, trapNearby, sonar,
+            dir, player.getEnergy(), x, y,
             game.getCurrentTurn(), game.getTurnLimit(), treasuresFound,
             game.getIsRunning(), game.getPlayer().getPosition(), false);
         PDataPacket response = new DataPacket();
@@ -85,6 +92,8 @@ int main(int argc, char* argv[])
         game.setCurrentTurn(response->currentTurn);
         treasureNearby = response->treasureNearby;
         trapNearby = response->trapNearby;
+        sonar = response->sonar;
+        isRunning = response->isRunning;
         Map map = game.getMap();
         Cell cell = map.getCell(player.getPosition().x, player.getPosition().y);
 		switch (action)
@@ -117,6 +126,7 @@ int main(int argc, char* argv[])
                 case TREASURE:
                 {
                     cout << "Treasure found!" << endl;
+                    game.setTreasuresFound(response->treasuresFound);
                 }
                 break;
                 case TRAP:
@@ -166,8 +176,21 @@ int main(int argc, char* argv[])
                 cout << "You replenished your energy. Current energy: " << player.getEnergy() << endl;
             }
             break;
+            case 7:
+            {
+                if (sonar)
+                {
+                    cout << "The sonar detects something in that direction." << endl;
+                }
+                else
+                {
+                    cout << "Nothing detected in that direction." << endl;
+                }
+            }
+            break;
 		}
     }
+    cout << "Game finished. Treasures found: " << treasuresFound << endl;
     std::cout << "Client finishing..." << std::endl;
     int iResult = closesocket(s);
     if (iResult == SOCKET_ERROR) {

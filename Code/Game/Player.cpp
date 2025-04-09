@@ -82,15 +82,8 @@ void Player::eat()
 }
 
 // Uses sonar to detect treasures or traps in a specified direction
-void Player::useSonar(Map& map) const
+bool Player::useSonar(Map& map, char dir, int x, int y) const
 {
-    std::cout << "Choose a direction to fire the sonar (N/S/E/W): ";
-    char dir;
-    std::cin >> dir;
-    dir = std::toupper(dir);  // Convert direction input to uppercase
-
-    int x = pos.x;
-    int y = pos.y;
     bool found = false;
 
     // Check in the specified direction (N, S, E, W) for treasures or traps
@@ -138,18 +131,8 @@ void Player::useSonar(Map& map) const
         break;
     default:
         cout << "Invalid direction." << endl;
-        return;
     }
-
-    // Output sonar results
-    if (found)
-    {
-        cout << "The sonar detects something in that direction." << endl;
-    }
-    else
-    {
-        cout << "Nothing detected in that direction." << endl;
-    }
+    return found;
 }
 
 // Getter methods for player energy and treasures found
