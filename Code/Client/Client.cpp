@@ -14,6 +14,11 @@ using namespace std;
 
 int obtainNewPort(SOCKET s, sockaddr_in* server_addr, string prefix);
 DWORD WINAPI CommunicationThread(LPVOID param);
+void clearScreen()
+{
+    system("pause");
+    system("CLS");
+}
 int main(int argc, char* argv[])
 {
     if (argc < 2) {
@@ -189,6 +194,7 @@ int main(int argc, char* argv[])
             }
             break;
 		}
+        clearScreen();
     }
     cout << "Game finished. Treasures found: " << treasuresFound << endl;
     std::cout << "Client finishing..." << std::endl;

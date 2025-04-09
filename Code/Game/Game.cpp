@@ -2,20 +2,20 @@
 #include <iostream>
 
 // Constructor with map size and turn limit
-Game::Game(int width, int height, int turns) : map(width, height), turnLimit(turns), currentTurn(0), isRunning(true), treasuresFound(0), maxTreasures(5) {}
+Game::Game(int width, int height, int turns) : map(width, height), turnLimit(turns), currentTurn(1), isRunning(true), treasuresFound(0), maxTreasures(5) {}
 
 // Constructor with map size, number of treasures, and turn limit
 Game::Game(int width, int height, int numTreasures, int limit)
-	: map(width, height, numTreasures), turnLimit(limit), currentTurn(0), isRunning(true), treasuresFound(0), maxTreasures(numTreasures) {}
+	: map(width, height, numTreasures), turnLimit(limit), currentTurn(1), isRunning(true), treasuresFound(0), maxTreasures(numTreasures) {}
 
 // Default constructor
-Game::Game() :map(0, 0, 0), turnLimit(0), currentTurn(0), isRunning(false), treasuresFound(0), maxTreasures(0) {}
+Game::Game() :map(0, 0, 0), turnLimit(0), currentTurn(1), isRunning(false), treasuresFound(0), maxTreasures(0) {}
 
 
 // Main game loop that runs each turn
 void Game::run()
 {
-	cout << "Turn: " << currentTurn + 1 << "/" << turnLimit << endl;  // Display current turn
+	cout << "Turn: " << currentTurn << "/" << turnLimit << endl;  // Display current turn
 	cout << "Energy: " << player.getEnergy() << endl;  // Display current player energy
 	cout << "Treasures found: " << treasuresFound << "/" << maxTreasures << endl;
 	map.displayMap(player.getPosition());  // Display the map with the player's current position
