@@ -4,23 +4,91 @@
 #include "Cell.hpp"
 #include "Position.hpp"
 
+/**
+ * @class Map
+ * @brief Represents the game map composed of a 2D grid of cells.
+ *
+ * This class manages the grid structure, map dimensions,
+ * and provides methods to interact with and modify the map.
+ */
 class Map
 {
 private:
-    vector<vector<Cell>> grid;  // 2D grid representing the map of cells
-    int width, height;          // Dimensions of the map (width and height)
+    /**
+     * @brief 2D grid representing the map of cells.
+     */
+    vector<vector<Cell>> grid;
+
+    /**
+     * @brief Width of the map (number of columns).
+     */
+    int width;
+
+    /**
+     * @brief Height of the map (number of rows).
+     */
+    int height;
 
 public:
-    Map(int width, int height, int numTreasures);  // Constructor with map size and number of treasures
-    Map(int width, int height);                    // Constructor with map size only
-    Map();                                         // Default constructor
+    /**
+     * @brief Constructs a map with specified dimensions and a given number of treasures.
+     * @param width Width of the map.
+     * @param height Height of the map.
+     * @param numTreasures Number of treasures to randomly place on the map.
+     */
+    Map(int width, int height, int numTreasures);
 
-    void displayMap(const Position& playerPos) const;  // Displays the map, highlighting the player's position
-    Cell& getCell(int x, int y);                      // Returns a reference to the cell at coordinates (x, y)
-    bool isValidPosition(int x, int y) const;          // Checks if the given coordinates are valid on the map
+    /**
+     * @brief Constructs a map with specified dimensions without treasures.
+     * @param width Width of the map.
+     * @param height Height of the map.
+     */
+    Map(int width, int height);
 
-    void setCell(int x, int y, Cell newCell);          // Sets a new cell at the given coordinates
+    /**
+     * @brief Default constructor that initializes an empty map.
+     */
+    Map();
 
-    int getHeight();  // Returns the height of the map
-    int getWidth();   // Returns the width of the map
+    /**
+     * @brief Displays the map, highlighting the player's current position.
+     * @param playerPos The current position of the player.
+     */
+    void displayMap(const Position& playerPos) const;
+
+    /**
+     * @brief Returns a reference to the cell at the specified coordinates.
+     * @param x Horizontal coordinate (column index).
+     * @param y Vertical coordinate (row index).
+     * @return Reference to the corresponding Cell.
+     */
+    Cell& getCell(int x, int y);
+
+    /**
+     * @brief Checks if the given coordinates are valid within the map bounds.
+     * @param x Horizontal coordinate (column index).
+     * @param y Vertical coordinate (row index).
+     * @return True if the position is valid, false otherwise.
+     */
+    bool isValidPosition(int x, int y) const;
+
+    /**
+     * @brief Sets a new cell at the specified coordinates.
+     * @param x Horizontal coordinate (column index).
+     * @param y Vertical coordinate (row index).
+     * @param newCell The new Cell to set.
+     */
+    void setCell(int x, int y, Cell newCell);
+
+    /**
+     * @brief Returns the height of the map (number of rows).
+     * @return Height of the map.
+     */
+    int getHeight();
+
+    /**
+     * @brief Returns the width of the map (number of columns).
+     * @return Width of the map.
+     */
+    int getWidth();
 };

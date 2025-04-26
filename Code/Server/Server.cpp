@@ -86,7 +86,7 @@ int main()
 }
 
 
-//makes operation with op1 and op2 storing the result in res, all of them fields of clientPacket
+// Changes values from clientPacket and sends them
 HANDLE serverFun(PDataPacket clientPacket, SOCKET s, sockaddr_in* client_addr, int i, string prefix) {
     int result = -1;
     //now we create a socket that uses IP (AF_INET) with UDP (SOCK_DGRAM, IPPROTO_UDP) 
@@ -137,12 +137,14 @@ HANDLE serverFun(PDataPacket clientPacket, SOCKET s, sockaddr_in* client_addr, i
 
     return hThread;
 }
-Game game(10, 10, 5, 30);
+Game game;
 //function of dedicated thread in the server for a specific client
 DWORD WINAPI threadFun(LPVOID param) {
     PThreadInfo thInfo = (ThreadInfo*)param;
     bool serve = true;
     PDataPacket packet = new DataPacket();
+    Game g(WIDTH, HEIGHT, TREASURES, TURNS);
+    game = g; // So that every client has a different game
     while (serve) {
         std::cout << "Server Thread ready to recv" << std::endl;
         //recv msg, then cast it to DataPacket and call serverFun
@@ -168,14 +170,14 @@ DWORD WINAPI threadFun(LPVOID param) {
     return 0;
 }
 
-//makes operation with op1 and op2 storing the result in res, all of them fields of clientPacket
+// Makes operation and modifies clientPacket with the necessary information to update the game correctly
 int serverThreadFun(PDataPacket clientPacket) {
     cout << "Server received packet" << endl;
-    Player player = game.getPlayer();
-    Map map = game.getMap();
-    int x = 0, y = 0;
-    player.setEnergy(clientPacket->energy);
-    player.setPosition(clientPacket->position);
+    Player player = game.getPlayer(); // To make the code more readable
+    Map map = game.getMap(); // To make the code more readable
+
+    player.setEnergy(clientPacket->energy); // Sets energy before reducing/increasing it, to make it match with the client's
+    player.setPosition(clientPacket->position); // Sets position before moving player, so that it matches with the client's
     switch (clientPacket->operation)
     {
 	    case MOVE:
@@ -206,7 +208,7 @@ int serverThreadFun(PDataPacket clientPacket) {
 	    case DIG:
 	    {
 		    player.dig(map);
-            game.setMap(map);
+            game.setMap(map); // Game has to set map because map is a temporary variable, not the game's actual map
 		    clientPacket->isDug = true;
 		    clientPacket->energy = player.getEnergy();
 		    if (map.getCell(player.getPosition().x, player.getPosition().y).hasTreasure)
@@ -258,14 +260,17 @@ int serverThreadFun(PDataPacket clientPacket) {
 	    }
 	    break;
     }
+    // Increases turn number if it's not the last one
     if(clientPacket->currentTurn != clientPacket->maxTurns)
     {
         clientPacket->currentTurn++;
     }
+    // Sends signal to client to end connection because the game is over
     else
     {
         clientPacket->isRunning = false;
     }
+    // If player runs out of energy, the game ends
     if (clientPacket->energy <= 0)
     {
         clientPacket->isRunning = false;

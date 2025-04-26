@@ -9,7 +9,10 @@
 #include <assert.h>
 #include "../Game/Game.hpp"
 
-#define MSG_SIZE 256
+#define WIDTH 10
+#define HEIGHT 10
+#define TREASURES 5
+#define TURNS 30
 enum Operation
 {
     MOVE, INSPECT, DIG, USEMAP, PLACEFLAG, EAT, SONAR, EXIT

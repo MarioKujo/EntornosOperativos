@@ -13,7 +13,7 @@
 using namespace std;
 
 int obtainNewPort(SOCKET s, sockaddr_in* server_addr, string prefix);
-DWORD WINAPI CommunicationThread(LPVOID param);
+
 void clearScreen()
 {
     system("pause");
@@ -53,9 +53,9 @@ int main(int argc, char* argv[])
     string prefix = "Client:";
     obtainNewPort(s, &server_addr, prefix);
     std::cout << "Client already obtained new port: " << ntohs(server_addr.sin_port) << std::endl;
-    enum CellInfo cd = NOTHING;
-    Game game(10, 10, 30);
-    game.run();
+    enum CellInfo cI = NOTHING; // To use cellInfo later
+    // Creates a game with the map's width, height and the max number of turns (has to be the same as server's)
+    Game game(WIDTH, HEIGHT, TURNS); 
     system("CLS");
     bool isRunning = true;
     int treasuresFound = 0;
@@ -63,11 +63,11 @@ int main(int argc, char* argv[])
     bool treasureNearby = false, trapNearby = false, sonar = false;
     while (isRunning)
     {
-        game.run();
+        game.run(); // Shows board and menu
         int action;
-        cin >> action;
+        cin >> action; // Inputs action
         int x = 0, y = 0;
-        if (action == 1)
+        if (action == 1) // If action is move, inputs x and y displacement
         {
             cout << "x displacement: ";
             cin >> x;
@@ -75,23 +75,26 @@ int main(int argc, char* argv[])
             cin >> y;
         }
         char dir = ' ';
-        if (action == 7)
+        if (action == 7) // If action is sonar, chooses direction
         {
             cout << "Choose a direction to fire the sonar (N/S/E/W): ";
             cin >> dir;
             dir = toupper(dir);
         }
-        PDataPacket packet = new DataPacket(client, static_cast<Operation>(action - 1), cd,
+        // Creates packet with necessary information to send to server (action - 1 because enums start at 0)
+        PDataPacket packet = new DataPacket(client, static_cast<Operation>(action - 1), cI,
             treasureNearby, trapNearby, sonar,
             dir, player.getEnergy(), x, y,
             game.getCurrentTurn(), game.getTurnLimit(), treasuresFound,
             game.getIsRunning(), game.getPlayer().getPosition(), false);
+        // Allocates for response
         PDataPacket response = new DataPacket();
         sendtorecvfromMsg(s, &server_addr, packet, response, prefix);
-        if (action == 1)
+        if (action == 1) // Sets player position if action is move
         {
             player.setPosition(response->position);
         }
+        // Sets all other values
         player.setEnergy(response->energy);
         game.setPlayer(player);
         game.setCurrentTurn(response->currentTurn);
@@ -103,6 +106,7 @@ int main(int argc, char* argv[])
         Cell cell = map.getCell(player.getPosition().x, player.getPosition().y);
 		switch (action)
 		{
+            // Message for when player inspects the cell he's standing on
 		    case 2:
 		    {
 			    if (response->isDug)
@@ -120,13 +124,23 @@ int main(int argc, char* argv[])
 			    }
 		    }
 		    break;
+
+            // When player digs cell
             case 3:
             {
-                cd = response->cellInfo;
+                // Receives cellInfo value
+                cI = response->cellInfo;
+                // Changes boolean
                 cell.isDug = response->isDug;
+
+                // Sets cell in the copied map
                 map.setCell(player.getPosition().x, player.getPosition().y, cell);
+
+                // Sets map in the game
                 game.setMap(map);
-                switch (cd)
+
+                // Prints something depending on the information
+                switch (cI)
                 {
                 case NOTHING:
                 {
@@ -144,13 +158,11 @@ int main(int argc, char* argv[])
                     cout << "It's a trap!" << endl;
                 }
                 break;
-                case FLAG:
-                {
-                    cout << "This cell has a flag." << endl;
-                }
                 }
             }
             break;
+
+            // Messages for when the player uses the map
             case 4:
             {
                 if (trapNearby && treasureNearby)
@@ -171,6 +183,8 @@ int main(int argc, char* argv[])
                 }
             }
             break;
+
+            // Flags the cell where the player is currently standing on
             case 5:
             {
                 if (response->cellInfo == FLAG)
@@ -181,11 +195,15 @@ int main(int argc, char* argv[])
                 }
             }
             break;
+
+            // Eats
             case 6:
             {
                 cout << "You replenished your energy. Current energy: " << player.getEnergy() << endl;
             }
             break;
+
+            // Uses sonar
             case 7:
             {
                 if (sonar)
@@ -201,6 +219,8 @@ int main(int argc, char* argv[])
 		}
         clearScreen();
     }
+    // Shows the amount of treasures player has revealed
+    game.getMap().displayMap(player.getPosition());
     cout << "Game finished. Treasures found: " << treasuresFound << endl;
     std::cout << "Client finishing..." << std::endl;
     int iResult = closesocket(s);
@@ -220,11 +240,6 @@ int obtainNewPort(SOCKET s, sockaddr_in* server_addr, string prefix) {
     PDataPacket response = new DataPacket();
     //IMPORTANT: will overwrite server_addr with the server addr with the new port, since the response msg in the server is sent through the new socket!
     sendtorecvfromMsg(s, server_addr, packet, response, prefix);
-    return 0;
-}
-
-DWORD WINAPI CommunicationThread(LPVOID param)
-{
     return 0;
 }
 
