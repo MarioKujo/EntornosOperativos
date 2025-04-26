@@ -107,8 +107,13 @@ int main(int argc, char* argv[])
 		    {
 			    if (response->isDug)
 			    {
-				    cout << "There's nothing here." << endl;
+				    cout << "Cell has already been dug." << endl;
 			    }
+                if (response->cellInfo == FLAG)
+                {
+                    cout << "There's a flag here." << endl;
+                    break;
+                }
 			    if (!response->isDug)
 			    {
 				    cout << "Cell hasn't been dug." << endl;

@@ -190,8 +190,14 @@ int serverThreadFun(PDataPacket clientPacket) {
 		    if (map.getCell(clientPacket->position.x, clientPacket->position.y).isDug)
 		    {
 			    clientPacket->isDug = true;
+                break;
 		    }
-		    else
+            else if (map.getCell(clientPacket->position.x, clientPacket->position.y).hasFlag)
+            {
+                clientPacket->cellInfo = FLAG;
+                break;
+            }
+		    else if(!map.getCell(clientPacket->position.x, clientPacket->position.y).isDug)
 		    {
 			    clientPacket->isDug = false;
 		    }
@@ -200,6 +206,7 @@ int serverThreadFun(PDataPacket clientPacket) {
 	    case DIG:
 	    {
 		    player.dig(map);
+            game.setMap(map);
 		    clientPacket->isDug = true;
 		    clientPacket->energy = player.getEnergy();
 		    if (map.getCell(player.getPosition().x, player.getPosition().y).hasTreasure)
@@ -230,6 +237,7 @@ int serverThreadFun(PDataPacket clientPacket) {
 	    case PLACEFLAG:
 	    {
 		    player.placeFlag(map);
+            game.setMap(map);
 		    clientPacket->cellInfo = FLAG;
 	    }
 	    break;
