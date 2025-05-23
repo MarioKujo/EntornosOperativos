@@ -1,7 +1,4 @@
 #include "Map.hpp"
-#include <iostream>
-#include <cstdlib>
-#include <ctime>
 
 // Constructor that initializes the map with given dimensions and number of treasures
 Map::Map(int w, int h, int numTreasures) : width(w), height(h)
@@ -66,9 +63,16 @@ void Map::displayMap(const Position& playerPos) const
     }
 }
 
+const Cell& Map::getCell(int x, int y) const
+{
+    assert(isValidPosition(x, y));
+    return grid[y][x];
+}
+
 // Returns a reference to the cell at the given coordinates
 Cell& Map::getCell(int x, int y)
 {
+    assert(isValidPosition(x, y));
     return grid[y][x];
 }
 
@@ -79,19 +83,20 @@ bool Map::isValidPosition(int x, int y) const
 }
 
 // Sets the given cell at coordinates (x, y) to a new cell
-void Map::setCell(int x, int y, Cell newCell)
+void Map::setCell(int x, int y, const Cell& newCell)
 {
-    grid[y][x] = newCell;  // Update the cell at the specified position
+    assert(isValidPosition(x, y));
+    grid[y][x] = newCell;
 }
 
 // Returns the height (rows) of the map
-int Map::getHeight()
+int Map::getHeight() const
 {
     return height;
 }
 
 // Returns the width (columns) of the map
-int Map::getWidth()
+int Map::getWidth() const
 {
     return width;
 }

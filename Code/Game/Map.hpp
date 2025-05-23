@@ -1,6 +1,9 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <cassert>
 #include "Cell.hpp"
 #include "Position.hpp"
 
@@ -62,6 +65,7 @@ public:
      * @param y Vertical coordinate (row index).
      * @return Reference to the corresponding Cell.
      */
+    const Cell& getCell(int x, int y) const;
     Cell& getCell(int x, int y);
 
     /**
@@ -78,17 +82,17 @@ public:
      * @param y Vertical coordinate (row index).
      * @param newCell The new Cell to set.
      */
-    void setCell(int x, int y, Cell newCell);
+    void setCell(int x, int y, const Cell& newCell);
 
     /**
      * @brief Returns the height of the map (number of rows).
      * @return Height of the map.
      */
-    int getHeight();
+    int getHeight() const;
 
     /**
      * @brief Returns the width of the map (number of columns).
      * @return Width of the map.
      */
-    int getWidth();
+    int getWidth() const;
 };
