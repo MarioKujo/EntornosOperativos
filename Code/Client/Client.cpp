@@ -112,91 +112,111 @@ int getPlayerAction(int& x, int& y, char& dir)
 }
 
 // Handles the response from the server based on the player's action
-void handleServerResponse(Game& game, Player& player, Map& map, PDataPacket response, int action, CellInfo& cellInfo, bool& treasureNearby, bool& trapNearby, bool& sonar, bool& isRunning)
+void handleServerResponse(Game& game, Player& player, Map& map, Cell& cell, PDataPacket response, int action, CellInfo& cellInfo, bool& treasureNearby, bool& trapNearby, bool& sonar, bool& isRunning)
 {
-    Cell cell = map.getCell(player.getPosition().x, player.getPosition().y);
 
     switch (action)
     {
-    case 2:
-    {
-        // Check if the cell is dug or contains a flag
-        if (response->isDug) cout << "Cell has already been dug." << endl;
-        if (response->cellInfo == FLAG) cout << "There's a flag here." << endl;
-        if (!response->isDug) cout << "Cell hasn't been dug." << endl;
-        break;
-    }
+	    case 1:
+	    {
+		    if (response->canMove)
+		    {
+			    player.setPosition(response->position);
+		    }
+		    else
+		    {
+			    cout << "Invalid movement." << endl;
+		    }
 
-    case 3:
-    {
-        // Update cell info and map with the server response
-        cellInfo = response->cellInfo;
-        cell.isDug = response->isDug;
-        map.setCell(player.getPosition().x, player.getPosition().y, cell);
-        game.setMap(map);
-
-        // Provide feedback depending on cell content
-        switch (cellInfo)
+		    player.setEnergy(response->energy);
+		    game.setPlayer(player);
+		    break;
+	    }
+        case 2:
         {
-        case NOTHING:
-        {
-            cout << "There's nothing here." << endl;
-            break;
-        }
-        case TREASURE:
-        {
-            cout << "Treasure found!" << endl;
-            game.setTreasuresFound(response->treasuresFound);
-            break;
-        }
-        case TRAP:
-        {
-            cout << "It's a trap!" << endl;
-            break;
-        }
-        default:
+            // Check if the cell is dug or contains a flag
+            if (response->isDug) cout << "Cell has already been dug." << endl;
+            if (response->cellInfo == FLAG) cout << "There's a flag here." << endl;
+            if (!response->isDug) cout << "Cell hasn't been dug." << endl;
             break;
         }
 
-        break;
-    }
-
-    case 4:
-    {
-        // Show sonar warnings about nearby traps or treasures
-        displaySonarWarning(treasureNearby, trapNearby);
-        break;
-    }
-
-    case 5:
-    {
-        // Mark the cell if a flag is detected
-        if (response->cellInfo == FLAG)
+        case 3:
         {
-            cell.hasFlag = true;
+            // Update cell info and map with the server response
+            cellInfo = response->cellInfo;
+            cell.isDug = response->isDug;
+            cell.hasFlag = false;
             map.setCell(player.getPosition().x, player.getPosition().y, cell);
             game.setMap(map);
+
+            // Provide feedback depending on cell content
+            switch (cellInfo)
+            {
+            case NOTHING:
+            {
+                cout << "There's nothing here." << endl;
+                break;
+            }
+            case TREASURE:
+            {
+                cout << "Treasure found!" << endl;
+                game.setTreasuresFound(response->treasuresFound);
+                break;
+            }
+            case TRAP:
+            {
+                cout << "It's a trap!" << endl;
+                break;
+            }
+            default:
+                break;
+            }
+
+            break;
         }
-        break;
-    }
 
-    case 6:
-    {
-        // Notify player of energy replenishment
-        cout << "You replenished your energy. Current energy: " << player.getEnergy() << endl;
-        break;
-    }
+        case 4:
+        {
+            // Show sonar warnings about nearby traps or treasures
+            displaySonarWarning(treasureNearby, trapNearby);
+            break;
+        }
 
-    case 7:
-    {
-        // Output sonar detection result
-        cout << (sonar ? "The sonar detects something in that direction." :
-            "Nothing detected in that direction.") << endl;
-        break;
-    }
+        case 5:
+        {
+            // Mark the cell if a flag is detected
+            if (response->cellInfo == FLAG)
+            {
+                cell.hasFlag = true;
+                map.setCell(player.getPosition().x, player.getPosition().y, cell);
+                game.setMap(map);
+                cout << "Cell (" << player.getPosition().x << ", " << player.getPosition().y << ") has been flagged." << endl;
+            }
+            else if (response->isDug)
+            {
+                cout << "Can't place a flag here, because the cell has already been dug." << endl;
+            }
+            break;
+        }
 
-    default:
-        break;
+        case 6:
+        {
+            // Notify player of energy replenishment
+            cout << "You replenished your energy. Current energy: " << player.getEnergy() << endl;
+            break;
+        }
+
+        case 7:
+        {
+            // Output sonar detection result
+            cout << (sonar ? "The sonar detects something in that direction." :
+                "Nothing detected in that direction.") << endl;
+            break;
+        }
+
+        default:
+            break;
     }
 
     clearScreen();
@@ -230,22 +250,19 @@ void runGameLoop(SOCKET s, sockaddr_in& serverAddr, const string& prefix, Game& 
             treasureNearby, trapNearby, sonar, dir,
             player.getEnergy(), x, y, game.getCurrentTurn(),
             game.getTurnLimit(), treasuresFound,
-            game.getIsRunning(), player.getPosition(), false);
+            game.getIsRunning(), false, player.getPosition(),
+            false);
 
         PDataPacket response = new DataPacket();
         sendtorecvfromMsg(s, &serverAddr, request, response, prefix);
 
-        if (action == 1)
-        {
-            player.setPosition(response->position);
-        }
-
-        player.setEnergy(response->energy);
-        game.setPlayer(player);
         game.setCurrentTurn(response->currentTurn);
 
         Map map = game.getMap();
-        handleServerResponse(game, player, map, response, action, cellInfo, treasureNearby, trapNearby, sonar, isRunning);
+
+        Cell cell = map.getCell(player.getPosition().x, player.getPosition().y);
+
+        handleServerResponse(game, player, map, cell, response, action, cellInfo, treasureNearby, trapNearby, sonar, isRunning);
     }
 }
 

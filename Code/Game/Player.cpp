@@ -1,19 +1,25 @@
 #include "Player.hpp"
 #include <iostream>
 
-Player::Player() : pos{ 0, 0 }, energy(100), treasuresFound(0) {}  // Constructor initializing position, energy, and treasures found
+Player::Player() : pos{ 0,0 }, energy(100), treasuresFound(0), info{ 0, 0 } {}
+// Constructor initializing position, energy, treasures found, treasures nearby and trap nearby
 
-Position Player::getPosition() const { return pos; }  // Returns the current position of the player
+Position Player::getPosition() const
+{
+    return pos;
+}  // Returns the current position of the player
 
 // Moves the player by a specified delta (dx, dy) if the new position is valid
-void Player::move(int dx, int dy, const Map& map)
+bool Player::move(int dx, int dy, const Map& map)
 {
     Position newPos = { pos.x + dx, pos.y + dy };
-    if (map.isValidPosition(newPos.x, newPos.y))  // Check if the new position is valid on the map
+    if (map.isValidPosition(newPos.x, newPos.y))
     {
         pos = newPos;
-        energy -= 5;  // Decrease energy on movement
+        energy -= 5;
+        return true;
     }
+    return false;
 }
 
 // Digs the cell at the player's current position, revealing treasure or not
@@ -28,10 +34,11 @@ void Player::dig(Map& map)
     }
 }
 
-// Inspect the cell at the player's current position (doesn't currently do anything)
-void Player::inspect(Map& map) const
+// Inspect the cell at the player's current position
+InspectInfo Player::inspect(const Map& map) const
 {
-    const Cell& cell = map.getCell(pos.x, pos.y);  // Access the cell, but no action is taken
+    const Cell& cell = map.getCell(pos.x, pos.y);
+    return { cell.isDug, cell.hasFlag };
 }
 
 // Places a flag on the cell at the player's current position
@@ -42,37 +49,36 @@ void Player::placeFlag(Map& map)
 }
 
 // Uses the map to check the area around the player for treasures or traps
-void Player::useMap(Map& map)
+NearbyInfo Player::useMap(const Map& map) const
 {
-    int range = 2;  // Range of cells to check around the player
-    treasureNearby = false;
-    trapNearby = false;
+    NearbyInfo info
+    {
+        false, false
+    };
+    int range = 2;
 
-    // Checks cells around the player within the range
     for (int dx = -range; dx <= range; ++dx)
     {
         for (int dy = -range; dy <= range; ++dy)
         {
             int newX = pos.x + dx;
             int newY = pos.y + dy;
-
-            // Check if the cell is within the map bounds
             if (map.isValidPosition(newX, newY))
             {
                 const Cell& cell = map.getCell(newX, newY);
-
-                // Check for treasures or traps
                 if (cell.hasTreasure)
                 {
-                    treasureNearby = true;
+                    info.treasureNearby = true;
                 }
-                if (cell.hasTrap)
+
+                if (cell.hasTrap) 
                 {
-                    trapNearby = true;
+                    info.trapNearby = true;
                 }
             }
         }
     }
+    return info;
 }
 
 // Restores energy to the player by 20 units
@@ -136,17 +142,13 @@ bool Player::useSonar(Map& map, char dir, int x, int y) const
 }
 
 // Getter methods for player energy and treasures found
-int Player::getEnergy() const { return energy; }
-int Player::getTreasuresFound() const { return treasuresFound; }
-
-bool Player::getTreasureNearby()
+int Player::getEnergy() const
 {
-    return treasureNearby;
+    return energy;
 }
-
-bool Player::getTrapNearby()
+int Player::getTreasuresFound() const
 {
-    return trapNearby;
+    return treasuresFound;
 }
 
 // Setter methods for position and energy

@@ -3,6 +3,11 @@
 #include <string>
 using namespace std;
 
+enum CellInfo
+{
+    NOTHING, TRAP, TREASURE, FLAG
+};
+
 /**
  * @class Cell
  * @brief Represents a single cell in the game grid.

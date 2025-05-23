@@ -182,35 +182,36 @@ int serverThreadFun(PDataPacket clientPacket) {
     {
 	    case MOVE:
 	    {
-		    player.move(clientPacket->dx, clientPacket->dy, map);
-		    clientPacket->energy = player.getEnergy();
-		    clientPacket->position = player.getPosition();
+            if(player.move(clientPacket->dx, clientPacket->dy, map))
+            {
+                clientPacket->energy = player.getEnergy();
+                clientPacket->position = player.getPosition();
+                clientPacket->canMove = true;
+            }
+            else
+            {
+                clientPacket->canMove = false;
+            }
 	    }
 	    break;
 	    case INSPECT:
 	    {
-		    if (map.getCell(clientPacket->position.x, clientPacket->position.y).isDug)
-		    {
-			    clientPacket->isDug = true;
-                break;
-		    }
-            else if (map.getCell(clientPacket->position.x, clientPacket->position.y).hasFlag)
-            {
-                clientPacket->cellInfo = FLAG;
-                break;
-            }
-		    else if(!map.getCell(clientPacket->position.x, clientPacket->position.y).isDug)
-		    {
-			    clientPacket->isDug = false;
-		    }
+            InspectInfo iInfo = player.inspect(map);
+            clientPacket->isDug = iInfo.isDug;
+            clientPacket->cellInfo = (iInfo.hasFlag ? FLAG : NOTHING);
 	    }
 	    break;
 	    case DIG:
 	    {
 		    player.dig(map);
+
+            map.getCell(player.getPosition().x, player.getPosition().y).hasFlag = false;
+
             game.setMap(map); // Game has to set map because map is a temporary variable, not the game's actual map
+
 		    clientPacket->isDug = true;
 		    clientPacket->energy = player.getEnergy();
+
 		    if (map.getCell(player.getPosition().x, player.getPosition().y).hasTreasure)
 		    {
 			    clientPacket->cellInfo = TREASURE;
@@ -231,16 +232,23 @@ int serverThreadFun(PDataPacket clientPacket) {
 	    break;
 	    case USEMAP:
 	    {
-		    player.useMap(map);
-		    clientPacket->treasureNearby = player.getTreasureNearby();
-		    clientPacket->trapNearby = player.getTrapNearby();
+		    NearbyInfo nInfo = player.useMap(map);
+		    clientPacket->treasureNearby = nInfo.treasureNearby;
+		    clientPacket->trapNearby = nInfo.trapNearby;
 	    }
 	    break;
 	    case PLACEFLAG:
 	    {
-		    player.placeFlag(map);
-            game.setMap(map);
-		    clientPacket->cellInfo = FLAG;
+            if(!map.getCell(player.getPosition().x, player.getPosition().y).isDug)
+            {
+                player.placeFlag(map);
+                game.setMap(map);
+                clientPacket->cellInfo = FLAG;
+            }
+            else
+            {
+                clientPacket->isDug = true;
+            }
 	    }
 	    break;
 	    case EAT:

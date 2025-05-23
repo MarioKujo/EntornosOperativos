@@ -10,6 +10,18 @@
  * treasures found, and nearby hazards. It provides actions like moving,
  * digging, inspecting, flagging, and using sonar.
  */
+
+struct NearbyInfo
+{
+    bool treasureNearby;
+    bool trapNearby;
+};
+
+struct InspectInfo {
+    bool isDug;
+    bool hasFlag;
+};
+
 class Player
 {
 private:
@@ -28,15 +40,7 @@ private:
      */
     int treasuresFound;
 
-    /**
-     * @brief True if there is a treasure nearby the player.
-     */
-    bool treasureNearby;
-
-    /**
-     * @brief True if there is a trap nearby the player.
-     */
-    bool trapNearby;
+    NearbyInfo info;
 
 public:
     /**
@@ -50,7 +54,7 @@ public:
      * @param dy Change in y-coordinate.
      * @param map Reference to the current map.
      */
-    void move(int dx, int dy, const Map& map);
+    bool move(int dx, int dy, const Map& map);
 
     /**
      * @brief Digs at the player's current position to reveal treasures.
@@ -62,7 +66,7 @@ public:
      * @brief Inspects the player's current cell (currently non-functional).
      * @param map Reference to the current map.
      */
-    void inspect(Map& map) const;
+    InspectInfo inspect(const Map& map) const;
 
     /**
      * @brief Places a flag at the player's current position.
@@ -74,8 +78,7 @@ public:
      * @brief Uses the map to scan nearby cells for treasures or traps.
      * @param map Reference to the current map.
      */
-    void useMap(Map& map);
-
+    NearbyInfo useMap(const Map& map) const;
     /**
      * @brief Restores the player's energy by a fixed amount.
      */
@@ -108,18 +111,6 @@ public:
      * @return Number of treasures found.
      */
     int getTreasuresFound() const;
-
-    /**
-     * @brief Checks if a treasure is nearby.
-     * @return True if a treasure is nearby, false otherwise.
-     */
-    bool getTreasureNearby();
-
-    /**
-     * @brief Checks if a trap is nearby.
-     * @return True if a trap is nearby, false otherwise.
-     */
-    bool getTrapNearby();
 
     /**
      * @brief Sets the player's position to a new value.
