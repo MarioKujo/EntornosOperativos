@@ -203,31 +203,34 @@ int serverThreadFun(PDataPacket clientPacket) {
 	    break;
 	    case DIG:
 	    {
-		    player.dig(map);
+            if (!map.getCell(player.getPosition().x, player.getPosition().y).isDug)
+            {
+                player.dig(map);
 
-            map.getCell(player.getPosition().x, player.getPosition().y).hasFlag = false;
+                map.getCell(player.getPosition().x, player.getPosition().y).hasFlag = false;
 
-            game.setMap(map); // Game has to set map because map is a temporary variable, not the game's actual map
+                game.setMap(map); // Game has to set map because map is a temporary variable, not the game's actual map
 
-		    clientPacket->isDug = true;
-		    clientPacket->energy = player.getEnergy();
+                clientPacket->isDug = true;
+                clientPacket->energy = player.getEnergy();
 
-		    if (map.getCell(player.getPosition().x, player.getPosition().y).hasTreasure)
-		    {
-			    clientPacket->cellInfo = TREASURE;
-			    clientPacket->treasuresFound++;
-			    break;
-		    }
-		    else if (map.getCell(player.getPosition().x, player.getPosition().y).hasTrap)
-		    {
-			    clientPacket->cellInfo = TRAP;
-			    break;
-		    }
-		    else
-		    {
-			    clientPacket->cellInfo = NOTHING;
-			    break;
-		    }
+                if (map.getCell(player.getPosition().x, player.getPosition().y).hasTreasure)
+                {
+                    clientPacket->cellInfo = TREASURE;
+                    clientPacket->treasuresFound++;
+                    break;
+                }
+                else if (map.getCell(player.getPosition().x, player.getPosition().y).hasTrap)
+                {
+                    clientPacket->cellInfo = TRAP;
+                    break;
+                }
+                else
+                {
+                    clientPacket->cellInfo = NOTHING;
+                    break;
+                }
+            }
 	    }
 	    break;
 	    case USEMAP:

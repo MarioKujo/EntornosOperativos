@@ -123,6 +123,7 @@ void handleServerResponse(Game& game, Player& player, Map& map, Cell& cell, PDat
 		    {
 			    player.setPosition(response->position);
 		    }
+
 		    else
 		    {
 			    cout << "Invalid movement." << endl;
@@ -143,34 +144,46 @@ void handleServerResponse(Game& game, Player& player, Map& map, Cell& cell, PDat
 
         case 3:
         {
-            // Update cell info and map with the server response
-            cellInfo = response->cellInfo;
-            cell.isDug = response->isDug;
-            cell.hasFlag = false;
-            map.setCell(player.getPosition().x, player.getPosition().y, cell);
-            game.setMap(map);
+            if(response->isDug)
+            {
+                // Update cell info and map with the server response
+                cellInfo = response->cellInfo;
+                cell.isDug = response->isDug;
+                cell.hasFlag = false;
 
-            // Provide feedback depending on cell content
-            switch (cellInfo)
-            {
-            case NOTHING:
-            {
-                cout << "There's nothing here." << endl;
-                break;
+                map.setCell(player.getPosition().x, player.getPosition().y, cell);
+                game.setMap(map);
+
+                player.setEnergy(response->energy);
+                game.setPlayer(player);
+
+                // Provide feedback depending on cell content
+                switch (cellInfo)
+                {
+                case NOTHING:
+                {
+                    cout << "There's nothing here." << endl;
+                    break;
+                }
+                case TREASURE:
+                {
+                    cout << "Treasure found!" << endl;
+                    game.setTreasuresFound(response->treasuresFound);
+                    break;
+                }
+                case TRAP:
+                {
+                    cout << "It's a trap!" << endl;
+                    break;
+                }
+                default:
+                    break;
+                }
             }
-            case TREASURE:
+
+            else
             {
-                cout << "Treasure found!" << endl;
-                game.setTreasuresFound(response->treasuresFound);
-                break;
-            }
-            case TRAP:
-            {
-                cout << "It's a trap!" << endl;
-                break;
-            }
-            default:
-                break;
+                cout << "Cell has already been dug." << endl;
             }
 
             break;

@@ -2,82 +2,103 @@
 #include <iostream>
 
 // Constructor with map size and turn limit
-Game::Game(int width, int height, int turns) : map(width, height), turnLimit(turns), currentTurn(1), isRunning(true), treasuresFound(0), maxTreasures(5) {}
+Game::Game(int width, int height, int turns)
+    : map(width, height),
+    turnLimit(turns),
+    currentTurn(1),
+    isRunning(true),
+    treasuresFound(0),
+    maxTreasures(5)
+{}
 
 // Constructor with map size, number of treasures, and turn limit
 Game::Game(int width, int height, int numTreasures, int limit)
-	: map(width, height, numTreasures), turnLimit(limit), currentTurn(1), isRunning(true), treasuresFound(0), maxTreasures(numTreasures) {}
+    : map(width, height, numTreasures),
+    turnLimit(limit),
+    currentTurn(1),
+    isRunning(true),
+    treasuresFound(0),
+    maxTreasures(numTreasures)
+{}
 
 // Default constructor
-Game::Game() :map(0, 0, 0), turnLimit(0), currentTurn(1), isRunning(false), treasuresFound(0), maxTreasures(0) {}
-
+Game::Game()
+    : map(0, 0, 0),
+    turnLimit(0),
+    currentTurn(1),
+    isRunning(false),
+    treasuresFound(0),
+    maxTreasures(0)
+{}
 
 // Main game loop that runs each turn
 void Game::run()
 {
-	cout << "Turn: " << currentTurn << "/" << turnLimit << endl;  // Display current turn
-	cout << "Energy: " << player.getEnergy() << endl;  // Display current player energy
-	cout << "Treasures found: " << treasuresFound << "/" << maxTreasures << endl;
-	map.displayMap(player.getPosition());  // Display the map with the player's current position
-	showMenu();  // Show the available menu options
+    std::cout << "Turn: " << currentTurn << "/" << turnLimit << std::endl;
+    std::cout << "Energy: " << player.getEnergy() << std::endl;
+    std::cout << "Treasures found: " << treasuresFound << "/" << maxTreasures << std::endl;
+    map.displayMap(player.getPosition());
+    showMenu();
 }
 
 // Displays the menu of available actions
 void Game::showMenu()
 {
-	cout << "\nActions:" << endl;
-	cout << "1. Move\n2. Inspect cell\n3. Dig\n4. Use map\n5. Flag\n6. Eat\n7. Use sonar\n8. Exit\nChoose an option: ";
+    std::cout << "\nActions:\n"
+        << "1. Move\n"
+        << "2. Inspect cell\n"
+        << "3. Dig\n"
+        << "4. Use map\n"
+        << "5. Flag\n"
+        << "6. Eat\n"
+        << "7. Use sonar\n"
+        << "8. Exit\n"
+        << "Choose an option: ";
 }
 
-// Returns the turn limit
-int Game::getTurnLimit()
+// Getters
+int Game::getTurnLimit() const
 {
-	return turnLimit;
+    return turnLimit;
 }
 
-// Returns the current turn number
-int Game::getCurrentTurn()
+int Game::getCurrentTurn() const
 {
-	return currentTurn;
+    return currentTurn;
 }
 
-// Returns whether the game is still running or not
-bool Game::getIsRunning()
+bool Game::getIsRunning() const
 {
-	return isRunning;
+    return isRunning;
 }
 
-// Returns the player object
-Player Game::getPlayer()
+Player Game::getPlayer() const
 {
-	return player;
+    return player;
 }
 
-// Returns the map object
-Map Game::getMap()
+Map Game::getMap() const
 {
-	return map;
+    return map;
 }
 
-// Sets the current turn to a new value
+// Setters
 void Game::setCurrentTurn(int newTurn)
 {
-	currentTurn = newTurn;
+    currentTurn = newTurn;
 }
 
-// Sets the player object to a new value
-void Game::setPlayer(Player newVal)
+void Game::setPlayer(const Player& newVal)
 {
-	player = newVal;
+    player = newVal;
 }
 
-// Sets the map object to a new value
-void Game::setMap(Map newMap)
+void Game::setMap(const Map& newMap)
 {
-	map = newMap;
+    map = newMap;
 }
 
 void Game::setTreasuresFound(int newVal)
 {
-	treasuresFound = newVal;
+    treasuresFound = newVal;
 }
