@@ -13,75 +13,107 @@
 #define HEIGHT 10
 #define TREASURES 5
 #define TURNS 30
+
 enum Operation
 {
-    MOVE, INSPECT, DIG, USEMAP, PLACEFLAG, EAT, SONAR, EXIT
+    MOVE,
+    INSPECT,
+    DIG,
+    USEMAP,
+    PLACEFLAG,
+    EAT,
+    SONAR,
+    EXIT
 };
 
-typedef class DataPacket {
-public:
-    int client_id;
-    enum Operation operation;
-    int dx, dy; // Only for Moving
-    bool isDug; // Only for inspecting
-    enum CellInfo cellInfo; // Only for Digging
-    bool trapNearby; // Only for map
-    bool treasureNearby; // Only for map
-    bool sonar; // Only for sonar
-    char dir; // Only for sonar
-    int energy;
-    int currentTurn;
-    int maxTurns;
-    int treasuresFound;
-    bool isRunning;
-    bool canMove;
-    Position position;
-    DataPacket() :client_id(0), operation(MOVE), cellInfo(NOTHING),
-        trapNearby(false), treasureNearby(false), sonar(false),
-        dir(' '), energy(0), dx(0), dy(0),
-        currentTurn(0), maxTurns(0), treasuresFound(0),
-        isRunning(false), canMove(false), position{0, 0},
-        isDug(false) {};
-    DataPacket(int _client_id, enum Operation _operation, enum CellInfo _cellDug,
-        bool _trapNearby, bool _treasureNearby, bool _sonar,
-        char _dir, int _energy, int _dx, int _dy, 
-        int _currentTurn, int _maxTurns,int _treasuresFound, 
-        bool _isRunning, bool _canMove, Position _position, bool _isDug) {
-        client_id = _client_id;
-        operation = _operation;
-        cellInfo = _cellDug;
-        trapNearby = _trapNearby;
-        treasureNearby = _treasureNearby;
-        sonar = _sonar;
-        dir = _dir;
-        energy = _energy;
-        position = _position;
-        dx = _dx;
-        dy = _dy;
-        isDug = _isDug;
-        currentTurn = _currentTurn;
-        maxTurns = _maxTurns;
-        treasuresFound = _treasuresFound;
-        isRunning = _isRunning;
-        canMove = _canMove;
-    }
-} *PDataPacket;
+struct DataPacket
+{
+    int client_id = 0;
+    Operation operation = Operation::MOVE;
 
-typedef class ThreadInfo {
-public:
-    int thread_id;
-    SOCKET s;
+    // Movement
+    int dx = 0, dy = 0;
+
+    // Inspect
+    bool isDug = false;
+
+    // Dig
+    CellInfo cellInfo = CellInfo::NOTHING;
+
+    // Map
+    bool trapNearby = false;
+    bool treasureNearby = false;
+
+    // Sonar
+    bool sonar = false;
+    char dir = ' ';
+
+    // Game status
+    int energy = 0;
+    int currentTurn = 0;
+    int maxTurns = 0;
+    int treasuresFound = 0;
+    bool isRunning = false;
+    bool canMove = false;
+    Position position = { 0, 0 };
+
+    DataPacket() = default;
+
+    DataPacket(int clientId,
+        Operation op,
+        CellInfo cellInfo,
+        bool trapNearby,
+        bool treasureNearby,
+        bool sonar,
+        char dir,
+        int energy,
+        int dx,
+        int dy,
+        int currentTurn,
+        int maxTurns,
+        int treasuresFound,
+        bool isRunning,
+        bool canMove,
+        const Position& pos,
+        bool isDug)
+        : client_id(clientId),
+        operation(op),
+        dx(dx),
+        dy(dy),
+        isDug(isDug),
+        cellInfo(cellInfo),
+        trapNearby(trapNearby),
+        treasureNearby(treasureNearby),
+        sonar(sonar),
+        dir(dir),
+        energy(energy),
+        currentTurn(currentTurn),
+        maxTurns(maxTurns),
+        treasuresFound(treasuresFound),
+        isRunning(isRunning),
+        canMove(canMove),
+        position(pos) {}
+};
+
+using PDataPacket = DataPacket*;
+
+struct ThreadInfo
+{
+    int thread_id = 0;
+    SOCKET s = INVALID_SOCKET;
     std::string prefix;
-    ThreadInfo() :thread_id(0), s(INVALID_SOCKET), prefix("") {};
-    ThreadInfo(int _thread_id, SOCKET _s, std::string _prefix) {
-        thread_id = _thread_id;
-        s = _s;
-        prefix = _prefix.c_str();
-    }
+
+    ThreadInfo() = default;
+
+    ThreadInfo(int threadId, SOCKET socket, const std::string& prefix)
+        : thread_id(threadId), s(socket), prefix(prefix) {}
+
     ~ThreadInfo() {
         closesocket(s);
     }
-} *PThreadInfo;
+};
+
+using PThreadInfo = ThreadInfo*;
 
 void treatError(const std::string msg, SOCKET s);
 
