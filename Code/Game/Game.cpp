@@ -72,12 +72,12 @@ bool Game::getIsRunning() const
     return isRunning;
 }
 
-Player Game::getPlayer() const
+Player& Game::getPlayer()
 {
     return player;
 }
 
-Map Game::getMap() const
+Map& Game::getMap()
 {
     return map;
 }
@@ -86,16 +86,6 @@ Map Game::getMap() const
 void Game::setCurrentTurn(int newTurn)
 {
     currentTurn = newTurn;
-}
-
-void Game::setPlayer(const Player& newVal)
-{
-    player = newVal;
-}
-
-void Game::setMap(const Map& newMap)
-{
-    map = newMap;
 }
 
 void Game::setTreasuresFound(int newVal)

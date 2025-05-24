@@ -38,12 +38,10 @@ public:
     int getTurnLimit() const;
     int getCurrentTurn() const;
     bool getIsRunning() const;
-    Player getPlayer() const;
-    Map getMap() const;
+    Player& getPlayer();
+    Map& getMap();
 
     // Setters
     void setCurrentTurn(int newTurn);
-    void setPlayer(const Player& newVal);
-    void setMap(const Map& newMap);
     void setTreasuresFound(int newVal);
 };

@@ -1,4 +1,4 @@
-#pragma comment(lib, "ws2_32.lib") //add WinSock2 library
+#pragma comment(lib, "ws2_32.lib") // Add WinSock2 library
 
 #include <stdio.h>
 #include <WinSock2.h>
@@ -9,283 +9,414 @@
 #include <iostream>
 #include <math.h>
 #include <format>
+
 using namespace std;
 
 #define MAX_THREADS 5
 
 HANDLE serverFun(PDataPacket clientPacket, SOCKET s, sockaddr_in* client_addr, int i, string prefix);
-int serverThreadFun(PDataPacket clientPacket);
-
+int serverThreadFun(PDataPacket clientPacket, Game* game);
 DWORD WINAPI threadFun(LPVOID param);
+
+// Initialize WinSock library for network communication
+int initializeWinSock()
+{
+    WSAData wsaData;
+    int result = WSAStartup(MAKEWORD(2, 2), &wsaData); // Request WinSock version 2.2
+    if (result != NO_ERROR)
+    {
+        cerr << "Server: Failed to start WinSock. Error: " << result << endl;
+        return result; // Return error code if initialization failed
+    }
+    cout << "Server: WinSock started correctly" << endl;
+    return 0; // Success
+}
+
+// Create a UDP socket, bind it to the specified IP and port
+SOCKET createAndBindSocket(const char* ip, int port)
+{
+    // Create socket (IPv4, UDP)
+    SOCKET s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+    if (s == INVALID_SOCKET)
+    {
+        cerr << "Server: Socket creation error." << endl;
+        return INVALID_SOCKET; // Return error if socket creation fails
+    }
+
+    cout << "Server: socket created" << endl;
+
+    // Setup socket address structure
+    sockaddr_in my_addr{};
+    my_addr.sin_family = AF_INET;
+    my_addr.sin_port = htons(port); // Convert port to network byte order
+
+    if (!inet_pton(AF_INET, ip, &(my_addr.sin_addr.s_addr)))
+    {
+        cerr << "Server: Error converting IP string to binary." << endl;
+        closesocket(s); // Clean up socket before returning error
+        return INVALID_SOCKET;
+    }
+
+    // Bind socket to the specified IP and port
+    if (bind(s, (sockaddr*)&my_addr, sizeof(my_addr)) == SOCKET_ERROR)
+    {
+        cerr << "Server: Bind error." << endl;
+        closesocket(s); // Clean up socket before returning error
+        return INVALID_SOCKET;
+    }
+
+    cout << "Server: socket bound to address: " << ip << " port: " << port << endl;
+    return s; // Return the created and bound socket
+}
 
 int main()
 {
-    string prefix = "Server: ";
-    std::cout << "Server: starting..." << std::endl;
-    //required intialization of WinSock 2 library, it writes some data om wsaData to check everything is ok
-    int result;
-    WSAData wsaData;
-    result = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    assert(result == NO_ERROR);
+    constexpr int port = 4000;
+    constexpr const char* ip = "127.0.0.1";
+    const string prefix = "Server: ";
 
-    std::cout << "Server: WinSock started correctly" << std::endl;
+    cout << prefix << "starting..." << endl;
 
-    //now we create a socket that uses IP (AF_INET) with UDP (SOCK_DGRAM and IPPROTO_UDP)
-    SOCKET s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    //assert(s != INVALID_SOCKET);
-    if (result == INVALID_SOCKET) {
-        treatErrorExit("Server: Socket creation error: ", s, -1);
-    }
-    std::cout << prefix << "socket created" << std::endl;
-
-    //now we specify the other machine we want to send messages to
-    sockaddr_in my_addr;
-    PCSTR address = "127.0.0.1";
-    if (!inet_pton(AF_INET, address, &(my_addr.sin_addr.s_addr))) { // Replace with your desired IP address
-        treatErrorExit("Server: error converting IP in string to binary: ", s, -1);
-    }
-    my_addr.sin_family = AF_INET;
-    my_addr.sin_port = htons(4000); //store bytes in network format big-endian
-
-    //in the server we need to bind in order to be able to recvfrom through the socket
-    result = bind(s, (sockaddr*)&my_addr, sizeof(my_addr));
-    //assert(result != SOCKET_ERROR);
-    if (result == SOCKET_ERROR) {
-        treatErrorExit("Server: bind error", s, -1);
+    // Initialize WinSock
+    if (initializeWinSock() != 0)
+    {
+        return -1; // Exit if WinSock initialization failed
     }
 
+    // Create and bind UDP socket to specified IP and port
+    SOCKET s = createAndBindSocket(ip, port);
+    if (s == INVALID_SOCKET)
+    {
+        WSACleanup(); // Clean up WinSock before exiting
+        return -1;
+    }
+
+    // Allocate memory for receiving data packets
     PDataPacket packet = new DataPacket();
-    std::cout << "Server: socket bound to address: " << address << " port: " << ntohs(my_addr.sin_port) << std::endl;
 
-    HANDLE  hThreadArray[MAX_THREADS]; //handlers of threads
-    int i = 0;
-    while (i < MAX_THREADS) {
-        std::cout << "Server ready to recv" << std::endl;
-        //recv msg and call serverFun
-        sockaddr_in client_addr;
-        recvfromMsg(s, &client_addr, packet, prefix);
+    HANDLE hThreadArray[MAX_THREADS];
+    int threadCount = 0;
 
-        //do something
-        hThreadArray[i] = serverFun(packet, s, &client_addr, i, prefix);
-        i++;
+    // Main loop: receive packets and spawn threads to handle clients
+    while (threadCount < MAX_THREADS)
+    {
+        cout << prefix << "ready to recv" << endl;
+
+        sockaddr_in client_addr{}; // Structure to store client address
+        recvfromMsg(s, &client_addr, packet, prefix); // Receive data from client
+
+        // Create a new thread to handle the client request
+        hThreadArray[threadCount] = serverFun(packet, s, &client_addr, threadCount, prefix);
+        threadCount++;
     }
 
-    // Wait until all threads have terminated.
-    //how many to wait for, array of handlers, wait for all of them, how long to wait
+    // Wait for all client threads to finish execution
     WaitForMultipleObjects(MAX_THREADS, hThreadArray, TRUE, INFINITE);
 
-    // Close all thread handles and free memory allocations.
-    //this could be in a different function
-    for (int i = 0; i < MAX_THREADS; i++) {
+    // Close all thread handles
+    for (int i = 0; i < MAX_THREADS; i++)
+    {
         CloseHandle(hThreadArray[i]);
     }
-    std::cout << "Server: cleaning up and returning" << endl;
-    // cleanup
+
+    // Free allocated memory and cleanup resources
+    delete packet;
     closesocket(s);
     WSACleanup();
+
+    cout << prefix << "cleaning up and exiting." << endl;
+    return 0;
 }
 
 
-// Changes values from clientPacket and sends them
-HANDLE serverFun(PDataPacket clientPacket, SOCKET s, sockaddr_in* client_addr, int i, string prefix) {
-    int result = -1;
-    //now we create a socket that uses IP (AF_INET) with UDP (SOCK_DGRAM, IPPROTO_UDP) 
+// Creates a UDP socket bound to the given IP and port (0 means OS assigns port)
+// Returns INVALID_SOCKET on failure
+SOCKET createBoundSocket(int port = 0, const char* ip = "127.0.0.1")
+{
     SOCKET s_new = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    if (s_new == INVALID_SOCKET) {
-        treatErrorExit(format("Server: Thread[{}] socket creation error: ", i), s, -1);
-    }
-    std::cout << "Server: socket created" << std::endl;
 
-    //now we specify the other machine we want to send messages to
-    sockaddr_in my_addr;
-    PCSTR address = "127.0.0.1";
-    if (!inet_pton(AF_INET, address, &(my_addr.sin_addr.s_addr))) { // Replace with your desired IP address
-        treatErrorExit(format("Server: Thread[{}] error converting IP in string to binary: ", i), s, -1);
+    if (s_new == INVALID_SOCKET)
+    {
+        cerr << "Server: Failed to create socket." << endl;
+        return INVALID_SOCKET;
     }
+
+    sockaddr_in my_addr{};
     my_addr.sin_family = AF_INET;
-    //store bytes in network format == big-endian
-    my_addr.sin_port = htons(0); //4000 Replace with your desired port or 0 so that the OS chooses one that is available
+    my_addr.sin_port = htons(port);
 
-    //in the server we need to bind in order to be able to listen through the socket
-    result = bind(s_new, (sockaddr*)&my_addr, sizeof(my_addr));
-    //assert(result != SOCKET_ERROR);
-    if (result == SOCKET_ERROR) {
-        treatErrorExit("Server: bind error", s, -1);
+    if (!inet_pton(AF_INET, ip, &(my_addr.sin_addr.s_addr)))
+    {
+        cerr << "Server: Failed to convert IP string to binary." << endl;
+        closesocket(s_new);
+        return INVALID_SOCKET;
     }
-    std::cout << "Server: socket bound to address: " << address << " port: " << ntohs(my_addr.sin_port) << std::endl;
 
-    //sendtoMsg(...new_port...) through the new one, because getsockname apparently only works with connection oriented sockets!
-    // remember that ALL UDP DATAGRAMS contain implicitly the network address of the sender, and this address is available when
-    // doing recvfrom
-    sendtoMsg(s_new, client_addr, clientPacket, prefix);
-    //create object that serves as param for the thread function
+    if (bind(s_new, (sockaddr*)&my_addr, sizeof(my_addr)) == SOCKET_ERROR)
+    {
+        cerr << "Server: Failed to bind socket." << endl;
+        closesocket(s_new);
+        return INVALID_SOCKET;
+    }
+
+    // Optional: print assigned port if port was 0
+    sockaddr_in bound_addr{};
+    int addr_len = sizeof(bound_addr);
+
+    if (getsockname(s_new, (sockaddr*)&bound_addr, &addr_len) == 0)
+    {
+        cout << "Server: socket bound to address: " << ip << " port: " << ntohs(bound_addr.sin_port) << endl;
+    }
+
+    return s_new;
+}
+
+// Creates a thread to handle client communication, returns thread HANDLE or NULL on failure
+HANDLE createClientThread(int i, SOCKET s_new, const string& prefix)
+{
     PThreadInfo thInfo = new ThreadInfo(i, s_new, prefix);
-    //call to thread(... s_new ...) with the new socket that only the thread will use
+
     DWORD dwThreadId;
     HANDLE hThread = CreateThread(
-        NULL,                   // default security attributes
-        0,                      // use default stack size  
-        threadFun,       // thread function name
-        (void*)thInfo,          // argument to thread function 
-        0,                      // use default creation flags 
-        &dwThreadId);   // returns the thread identifier 
+        NULL,           // default security attributes
+        0,              // default stack size
+        threadFun,      // thread function
+        (void*)thInfo,  // argument to thread function
+        0,              // default creation flags
+        &dwThreadId     // returns thread ID
+    );
 
-    if (hThread == NULL) {
-        treatErrorExit("CreateThread", s, -1);
+    if (hThread == NULL)
+    {
+        cerr << prefix << "Failed to create thread for client " << i << endl;
+        delete thInfo; // Avoid memory leak
+    }
+
+    return hThread;
+}
+
+// Main server function to create socket, send initial packet and create client thread
+HANDLE serverFun(PDataPacket clientPacket, SOCKET s, sockaddr_in* client_addr, int i, string prefix)
+{
+    SOCKET s_new = createBoundSocket(0, "127.0.0.1");
+
+    if (s_new == INVALID_SOCKET)
+    {
+        treatErrorExit(format("Server: Thread[{}] socket creation or bind error.", i), s, -1);
+    }
+
+    sendtoMsg(s_new, client_addr, clientPacket, prefix);
+
+    HANDLE hThread = createClientThread(i, s_new, prefix);
+
+    if (hThread == NULL)
+    {
+        treatErrorExit("Server: CreateThread failed", s, -1);
         ExitProcess(3);
     }
 
     return hThread;
 }
-Game game;
-//function of dedicated thread in the server for a specific client
-DWORD WINAPI threadFun(LPVOID param) {
+
+// Thread function that serves a client with its own game instance
+DWORD WINAPI threadFun(LPVOID param)
+{
     PThreadInfo thInfo = (ThreadInfo*)param;
     bool serve = true;
     PDataPacket packet = new DataPacket();
+
+    // Create a new game instance per thread/client
     Game g(WIDTH, HEIGHT, TREASURES, TURNS);
-    game = g; // So that every client has a different game
-    while (serve) {
-        std::cout << "Server Thread ready to recv" << std::endl;
-        //recv msg, then cast it to DataPacket and call serverFun
-        //sockaddr_in client_addr;
-        //recv msg, then cast it to DataPacket and call serverFun
-        sockaddr_in client_addr;
+
+    while (serve)
+    {
+        cout << "Server Thread ready to recv" << endl;
+
+        sockaddr_in client_addr{};
         recvfromMsg(thInfo->s, &client_addr, packet, "Server:");
 
         DataPacket clientPacket = (DataPacket)*packet;
 
-        //do something
-        if (!serverThreadFun(&clientPacket)) {
+        // Process the client packet
+        if (!serverThreadFun(&clientPacket, &g))
+        {
             sendtoMsg(thInfo->s, &client_addr, &clientPacket, thInfo->prefix);
         }
-        else { //if there is an error in serverThreadFun, or if the client sent some other unknown operation, close thread
-            serve = false; //will exit the loop and clean before returning
+
+        else
+        {
+            // Exit thread if error or client requests exit
+            serve = false;
         }
     }
-    //cleanup of thread
-    //closesocket(thInfo->s); //NOT NEEDED!! already in destructor of ThreadInfo
+
+    // Cleanup
+    // closesocket(thInfo->s); // Not needed, done in ThreadInfo destructor
     delete thInfo;
-    thInfo = NULL;
     return 0;
 }
 
-// Makes operation and modifies clientPacket with the necessary information to update the game correctly
-int serverThreadFun(PDataPacket clientPacket) {
-    cout << "Server received packet" << endl;
-    Player player = game.getPlayer(); // To make the code more readable
-    Map map = game.getMap(); // To make the code more readable
+// Handler functions for each operation
+void handleMove(PDataPacket clientPacket, Player& player, Map& map)
+{
+    if (player.move(clientPacket->dx, clientPacket->dy, map))
+    {
+        clientPacket->energy = player.getEnergy();
+        clientPacket->position = player.getPosition();
+        clientPacket->canMove = true;
+    }
 
-    player.setEnergy(clientPacket->energy); // Sets energy before reducing/increasing it, to make it match with the client's
-    player.setPosition(clientPacket->position); // Sets position before moving player, so that it matches with the client's
+    else
+    {
+        clientPacket->canMove = false;
+    }
+}
+
+void handleInspect(PDataPacket clientPacket, Player& player, Map& map) {
+    InspectInfo iInfo = player.inspect(map);
+    clientPacket->isDug = iInfo.isDug;
+    clientPacket->cellInfo = (iInfo.hasFlag ? FLAG : NOTHING);
+}
+
+void handleDig(PDataPacket clientPacket, Player& player, Map& map)
+{
+    if (!map.getCell(player.getPosition().x, player.getPosition().y).isDug)
+    {
+        player.dig(map);
+        map.getCell(player.getPosition().x, player.getPosition().y).hasFlag = false;
+
+        clientPacket->isDug = true;
+        clientPacket->energy = player.getEnergy();
+
+        if (map.getCell(player.getPosition().x, player.getPosition().y).hasTreasure)
+        {
+            clientPacket->cellInfo = TREASURE;
+            clientPacket->treasuresFound++;
+        }
+
+        else if (map.getCell(player.getPosition().x, player.getPosition().y).hasTrap)
+        {
+            clientPacket->cellInfo = TRAP;
+        }
+
+        else
+        {
+            clientPacket->cellInfo = NOTHING;
+        }
+    }
+}
+
+void handleUseMap(PDataPacket clientPacket, Player& player, Map& map)
+{
+    NearbyInfo nInfo = player.useMap(map);
+    clientPacket->treasureNearby = nInfo.treasureNearby;
+    clientPacket->trapNearby = nInfo.trapNearby;
+}
+
+void handlePlaceFlag(PDataPacket clientPacket, Player& player, Map& map)
+{
+    if (!map.getCell(player.getPosition().x, player.getPosition().y).isDug)
+    {
+        player.placeFlag(map);
+        clientPacket->cellInfo = FLAG;
+    }
+
+    else
+    {
+        clientPacket->isDug = true;
+    }
+}
+
+void handleEat(PDataPacket clientPacket, Player& player)
+{
+    player.eat();
+    clientPacket->energy = player.getEnergy();
+}
+
+void handleSonar(PDataPacket clientPacket, Player& player, Map& map)
+{
+    clientPacket->sonar = player.useSonar(map, clientPacket->dir, player.getPosition().x, player.getPosition().y);
+}
+
+// Main refactored server thread function
+int serverThreadFun(PDataPacket clientPacket, Game* game)
+{
+    cout << "Server received packet" << endl;
+
+    Player& player = game->getPlayer();
+    Map& map = game->getMap();
+
+    // Sync player state from client packet
+    player.setEnergy(clientPacket->energy);
+    player.setPosition(clientPacket->position);
+
     switch (clientPacket->operation)
     {
-	    case MOVE:
-	    {
-            if(player.move(clientPacket->dx, clientPacket->dy, map))
-            {
-                clientPacket->energy = player.getEnergy();
-                clientPacket->position = player.getPosition();
-                clientPacket->canMove = true;
-            }
-            else
-            {
-                clientPacket->canMove = false;
-            }
-	    }
-	    break;
-	    case INSPECT:
-	    {
-            InspectInfo iInfo = player.inspect(map);
-            clientPacket->isDug = iInfo.isDug;
-            clientPacket->cellInfo = (iInfo.hasFlag ? FLAG : NOTHING);
-	    }
-	    break;
-	    case DIG:
-	    {
-            if (!map.getCell(player.getPosition().x, player.getPosition().y).isDug)
-            {
-                player.dig(map);
+        case MOVE:
+        {
+            handleMove(clientPacket, player, map);
+            break;
+        }
 
-                map.getCell(player.getPosition().x, player.getPosition().y).hasFlag = false;
+        case INSPECT:
+        {
+            handleInspect(clientPacket, player, map);
+            break;
+        }
 
-                game.setMap(map); // Game has to set map because map is a temporary variable, not the game's actual map
+        case DIG:
+        {
+            handleDig(clientPacket, player, map);
+            break;
+        }
 
-                clientPacket->isDug = true;
-                clientPacket->energy = player.getEnergy();
+        case USEMAP:
+        {
+            handleUseMap(clientPacket, player, map);
+            break;
+        }
 
-                if (map.getCell(player.getPosition().x, player.getPosition().y).hasTreasure)
-                {
-                    clientPacket->cellInfo = TREASURE;
-                    clientPacket->treasuresFound++;
-                    break;
-                }
-                else if (map.getCell(player.getPosition().x, player.getPosition().y).hasTrap)
-                {
-                    clientPacket->cellInfo = TRAP;
-                    break;
-                }
-                else
-                {
-                    clientPacket->cellInfo = NOTHING;
-                    break;
-                }
-            }
-	    }
-	    break;
-	    case USEMAP:
-	    {
-		    NearbyInfo nInfo = player.useMap(map);
-		    clientPacket->treasureNearby = nInfo.treasureNearby;
-		    clientPacket->trapNearby = nInfo.trapNearby;
-	    }
-	    break;
-	    case PLACEFLAG:
-	    {
-            if(!map.getCell(player.getPosition().x, player.getPosition().y).isDug)
-            {
-                player.placeFlag(map);
-                game.setMap(map);
-                clientPacket->cellInfo = FLAG;
-            }
-            else
-            {
-                clientPacket->isDug = true;
-            }
-	    }
-	    break;
-	    case EAT:
-	    {
-		    player.eat();
-		    clientPacket->energy = player.getEnergy();
-	    }
-	    break;
-	    case SONAR:
-	    {
-		    clientPacket->sonar = player.useSonar(map, clientPacket->dir, player.getPosition().x, player.getPosition().y);
-	    }
-	    break;
-	    case EXIT:
-	    {
-		    clientPacket->isRunning = false;
-	    }
-	    break;
+        case PLACEFLAG:
+        {
+            handlePlaceFlag(clientPacket, player, map);
+            break;
+        }
+
+        case EAT:
+        {
+            handleEat(clientPacket, player);
+            break;
+        }
+
+        case SONAR:
+        {
+            handleSonar(clientPacket, player, map);
+            break;
+        }
+
+        case EXIT:
+        {
+            clientPacket->isRunning = false;
+            break;
+        }
     }
-    // Increases turn number if it's not the last one
-    if(clientPacket->currentTurn != clientPacket->maxTurns)
+
+    // Advance turn number unless it's the last turn
+    if (clientPacket->currentTurn != clientPacket->maxTurns)
     {
         clientPacket->currentTurn++;
     }
-    // Sends signal to client to end connection because the game is over
     else
     {
         clientPacket->isRunning = false;
     }
-    // If player runs out of energy, the game ends
+
+    // End game if player runs out of energy
     if (clientPacket->energy <= 0)
     {
         clientPacket->isRunning = false;
     }
+
     return 0;
 }
-
