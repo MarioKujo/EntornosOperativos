@@ -34,9 +34,9 @@ Game::Game()
 // Main game loop that runs each turn
 void Game::run()
 {
-    std::cout << "Turn: " << currentTurn << "/" << turnLimit << std::endl;
-    std::cout << "Energy: " << player.getEnergy() << std::endl;
-    std::cout << "Treasures found: " << treasuresFound << "/" << maxTreasures << std::endl;
+    cout << "Turn: " << currentTurn << "/" << turnLimit << endl;
+    cout << "Energy: " << player.getEnergy() << endl;
+    cout << "Treasures found: " << treasuresFound << "/" << maxTreasures << endl;
     map.displayMap(player.getPosition());
     showMenu();
 }
@@ -44,7 +44,7 @@ void Game::run()
 // Displays the menu of available actions
 void Game::showMenu()
 {
-    std::cout << "\nActions:\n"
+    cout << "\nActions:\n"
         << "1. Move\n"
         << "2. Inspect cell\n"
         << "3. Dig\n"
