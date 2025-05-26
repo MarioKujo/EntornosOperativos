@@ -17,8 +17,6 @@
 #include <math.h>
 #include <format>
 
-#include <nlohmann/json.hpp>
-
 using namespace std;
 
 #define MAX_THREADS 5

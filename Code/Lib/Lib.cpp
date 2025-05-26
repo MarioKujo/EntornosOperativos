@@ -25,27 +25,49 @@ void treatErrorExit(const std::string msg, SOCKET s, int error)
 
 //UDP calls
 
-//performs sendto, assuming all required WinSock2 previous calls were succesfull
 int sendtoMsg(SOCKET s, sockaddr_in* dest_addr, PDataPacket packet, std::string prefix)
 {
-    //now we just send the data through the socket
-    //we make the casting to char* because it expects data as just chars, last param 0 is for flags that we don't need
-    int result = sendto(s, (char*)packet, sizeof(DataPacket), 0, (SOCKADDR*)dest_addr, sizeof(SOCKADDR));
+    // Serialize the DataPacket object to JSON
+    json j = *packet;
+
+    // Convert the JSON object to a string
+    std::string msg = j.dump();
+
+    // Send the serialized JSON string as a UDP datagram
+    int result = sendto(s, msg.c_str(), (int)msg.size(), 0, (SOCKADDR*)dest_addr, sizeof(SOCKADDR));
+
+    // Ensure the send was successful
     assert(result != SOCKET_ERROR);
+
     return result;
 }
 
-//performs recvfrom, assuming all required WinSock2 previous calls were succesfull
 int recvfromMsg(SOCKET s, sockaddr_in* sender_addr, PDataPacket response, std::string prefix)
 {
-    //receive response from Server
-    //DataPacket response;
+    // Create a buffer to store the incoming data
+    char buffer[4096];
+
+    // Variable to hold the size of the sender's address structure
     int fromlen = sizeof(SOCKADDR);
-    //recvfrom addr is ALWAYS an out param 
-    int result = recvfrom(s, (char*)response, sizeof(DataPacket), 0, (SOCKADDR*)sender_addr, &fromlen);
+
+    // Receive data from the socket into the buffer
+    int result = recvfrom(s, buffer, sizeof(buffer) - 1, 0, (SOCKADDR*)sender_addr, &fromlen);
+
+    // Ensure the receive was successful
     assert(result != SOCKET_ERROR);
+
+    // Null-terminate the received data to safely convert it into a string
+    buffer[result] = '\0';
+
+    // Parse the received JSON string into a JSON object
+    json j = json::parse(buffer);
+
+    // Deserialize the JSON object into a DataPacket
+    *response = j.get<DataPacket>();
+
     return result;
 }
+
 
 //performs sendto and then recvfrom, assuming all required WinSock2 previous calls were succesfull
 int sendtorecvfromMsg(SOCKET s, sockaddr_in* dest_addr, PDataPacket packet, PDataPacket response, std::string prefix)
@@ -60,61 +82,4 @@ int recvfromsendtoMsg(SOCKET s, PDataPacket response, std::string prefix)
     sockaddr_in sender_addr;
     recvfromMsg(s, &sender_addr, response, prefix);
     return sendtoMsg(s, &sender_addr, response, prefix);
-}
-
-
-//TCP calls
-
-//performs send, assuming all required WinSock2 previous calls were succesfull
-int sendMsg(SOCKET acceptSocket, PDataPacket packet, std::string prefix)
-{
-    //IMPORTANT: size of struct/class not the size of the pointer!
-    int sbyteCount = send(acceptSocket, (char*)packet, sizeof(DataPacket), 0);
-    if (sbyteCount < 0)
-    {
-        treatError(std::format("{} send error: ", prefix), acceptSocket);
-    }
-    return sbyteCount;
-}
-
-//performs recv, assuming all required WinSock2 previous calls were succesfull
-int recvMsg(SOCKET acceptSocket, PDataPacket recv_msg, std::string prefix)
-{
-    int rbyteCount = recv(acceptSocket, (char*)recv_msg, sizeof(DataPacket), 0);
-    if (rbyteCount < 0)
-    {
-        treatError(std::format("{} recv error: ", prefix), acceptSocket); //change when loop to treatError
-    }
-    else
-    {
-        DataPacket clientPacket = (DataPacket)*recv_msg;
-    }
-    return rbyteCount;
-}
-
-//performs send and then recv, assuming all required WinSock2 previous calls were succesfull
-int sendrecvMsg(SOCKET s, PDataPacket packet, PDataPacket response, std::string prefix)
-{
-    sendMsg(s, packet, prefix);
-    return recvMsg(s, response, prefix);
-}
-
-//performs recv and then send, assuming all required WinSock2 previous calls were succesfull
-int recvsendMsg(SOCKET s, PDataPacket response, std::string prefix)
-{
-    recvMsg(s, response, prefix);
-    return sendMsg(s, response, prefix);
-}
-
-//invokes getsockname and retrieves the port number in this machine's architecture encoding
-int getAssignedPort(SOCKET s, sockaddr_in* my_addr)
-{
-    int namelen = sizeof(my_addr);
-    if (getsockname(s, (SOCKADDR*)my_addr, &namelen) != 0)
-    {
-        treatErrorExit("Server: getsockname error: ", s, -1);
-    }
-    int assigned_port = ntohs(my_addr->sin_port);
-    std::cout << "Server: socket bound to port: " << my_addr->sin_port << std::endl;
-    return assigned_port;
 }
