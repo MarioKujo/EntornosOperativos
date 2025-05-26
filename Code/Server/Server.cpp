@@ -1,14 +1,23 @@
-#pragma comment(lib, "ws2_32.lib") // Add WinSock2 library
+#pragma comment(lib, "ws2_32.lib")
 
-#include <stdio.h>
-#include <WinSock2.h>
-#include <WS2tcpip.h>
-#include <assert.h>
+#include "../Lib/Lib.h"
+
+#pragma comment(lib, "ws2_32.lib")
+
 #include "../Lib/Lib.h"
 #include "../Game/Game.hpp"
+
 #include <iostream>
+#include <stdio.h>
 #include <math.h>
 #include <format>
+
+
+#include <stdio.h>
+#include <math.h>
+#include <format>
+
+#include <nlohmann/json.hpp>
 
 using namespace std;
 
@@ -59,7 +68,7 @@ SOCKET createAndBindSocket(const char* ip, int port)
     }
 
     // Bind socket to the specified IP and port
-    if (bind(s, (sockaddr*)&my_addr, sizeof(my_addr)) == SOCKET_ERROR)
+    if (::bind(s, (sockaddr*)&my_addr, sizeof(my_addr)) == SOCKET_ERROR)
     {
         cerr << "Server: Bind error." << endl;
         closesocket(s); // Clean up socket before returning error
@@ -153,7 +162,7 @@ SOCKET createBoundSocket(int port = 0, const char* ip = "127.0.0.1")
         return INVALID_SOCKET;
     }
 
-    if (bind(s_new, (sockaddr*)&my_addr, sizeof(my_addr)) == SOCKET_ERROR)
+    if (::bind(s_new, (sockaddr*)&my_addr, sizeof(my_addr)) == SOCKET_ERROR)
     {
         cerr << "Server: Failed to bind socket." << endl;
         closesocket(s_new);
