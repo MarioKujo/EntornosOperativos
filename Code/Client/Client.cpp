@@ -34,7 +34,7 @@ void displaySonarWarning(bool treasureNearby, bool trapNearby)
     {
         cout << "Treasure nearby! Keep looking." << endl;
     }
-    else
+    else if (!trapNearby && !treasureNearby)
     {
         cout << "No signal of treasures nor traps nearby." << endl;
     }
@@ -197,25 +197,52 @@ void processSonarDirectionResponse(bool sonar)
 // Handles the response from the server based on the player's action
 void handleServerResponse(Game& game, Player& player, Map& map, Cell& cell, PDataPacket response, int action, CellInfo& cellInfo, bool& treasureNearby, bool& trapNearby, bool& sonar, bool& isRunning)
 {
-    switch (action)
-    {
-    case 1: processMovementResponse(player, response); break;
-    case 2: processDigPreviewResponse(response); break;
-    case 3: processDigResponse(game, player, map, cell, response, cellInfo); break;
-    case 4: displaySonarWarning(treasureNearby, trapNearby); break;
-    case 5: processFlagResponse(player, map, cell, response); break;
-    case 6: processEnergyResponse(player, response); break;
-    case 7: processSonarDirectionResponse(sonar); break;
-    default: break;
-    }
-
-    clearScreen();
-
     // Update shared status flags from the server response
     treasureNearby = response->treasureNearby;
     trapNearby = response->trapNearby;
     sonar = response->sonar;
     isRunning = response->isRunning;
+
+    switch (action)
+    {
+        case 1: 
+        {
+            processMovementResponse(player, response);
+            break;
+        }
+        case 2: 
+        {
+            processDigPreviewResponse(response);
+            break;
+        }
+        case 3: 
+        {
+            processDigResponse(game, player, map, cell, response, cellInfo);
+            break;
+        }
+        case 4:
+        {
+            displaySonarWarning(treasureNearby, trapNearby);
+            break;
+        }
+        case 5:
+        {
+            processFlagResponse(player, map, cell, response);
+            break;
+        }
+        case 6:
+        {
+            processEnergyResponse(player, response);
+            break;
+        }
+        case 7:
+        {
+            processSonarDirectionResponse(sonar);
+            break;
+        }
+    }
+
+    clearScreen();
 }
 
 // Main game loop handling input, communication, and state updates
