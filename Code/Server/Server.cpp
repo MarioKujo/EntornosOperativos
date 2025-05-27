@@ -280,7 +280,8 @@ void handleMove(PDataPacket clientPacket, Player& player, Map& map)
     }
 }
 
-void handleInspect(PDataPacket clientPacket, Player& player, Map& map) {
+void handleInspect(PDataPacket clientPacket, Player& player, Map& map)
+{
     InspectInfo iInfo = player.inspect(map);
     clientPacket->isDug = iInfo.isDug;
     clientPacket->cellInfo = (iInfo.hasFlag ? FLAG : NOTHING);

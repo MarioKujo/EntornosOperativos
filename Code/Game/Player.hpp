@@ -17,7 +17,8 @@ struct NearbyInfo
     bool trapNearby;
 };
 
-struct InspectInfo {
+struct InspectInfo
+{
     bool isDug;
     bool hasFlag;
 };
